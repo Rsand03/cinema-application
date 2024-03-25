@@ -9,12 +9,16 @@ async function load_movie_data() {
     });
 
     if (response.status !== 200) {
-        movies_selection_field.innerText = JSON.stringify(response.status);
+        movies_selection_field.innerText = response.status.toString();
     } else {
         const movies_selection_field = document.getElementById('movie-selection');
         const data = await response.json();
         console.log(data);
-        console.log(data.title);
-        movies_selection_field.innerText = data.movieAsString;
+        let displayedMovies = "";
+        for (const movie of data) {
+            displayedMovies += movie.asString + "\n";
+        }
+        console.log(displayedMovies);
+        movies_selection_field.innerText = displayedMovies;
     }
 }
