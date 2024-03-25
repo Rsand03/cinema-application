@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CinemaController {
 
-//    @RequestMapping
-//    public String HelloWorld() {
-//        return "Hello world";
-//    }
+    @RequestMapping("/movies")
+    public String GetMovies() {
+        return "Movies from back-end.";
+    }
 
 }
