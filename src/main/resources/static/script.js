@@ -12,7 +12,9 @@ async function load_movie_data() {
         movies_selection_field.innerText = JSON.stringify(response.status);
     } else {
         const movies_selection_field = document.getElementById('movie-selection');
-        // const data = await response.json();
-        movies_selection_field.innerText = response.toString();
+        const data = await response.json();
+        console.log(data);
+        console.log(data.title);
+        movies_selection_field.innerText = data.movieAsString;
     }
 }
