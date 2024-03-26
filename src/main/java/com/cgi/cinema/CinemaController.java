@@ -2,7 +2,12 @@ package com.cgi.cinema;
 
 import com.cgi.cinema.cinema.Cinema;
 import com.cgi.cinema.movie.Movie;
+import com.cgi.cinema.user.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -10,11 +15,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class CinemaController {
 
-    private Cinema cinema = new Cinema();
+    private final Cinema cinema = new Cinema();
+    private final User user = new User();
 
     @RequestMapping("/movies")
     public List<Map<String, String>> getMovies() {
@@ -30,6 +37,17 @@ public class CinemaController {
             response.add(movieHashMap);
         }
         return response;
+    }
+
+    @RequestMapping("/movies/selection")
+    public ResponseEntity<HttpStatus> getFoos(@RequestParam Integer id) {
+        Optional<Movie> newMovie = cinema.getMovieById(id);
+        if (newMovie.isPresent()) {
+            user.addToWatchingHistory(newMovie.get());
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

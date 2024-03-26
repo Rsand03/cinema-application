@@ -43,3 +43,16 @@ main {
     flex-direction: column;
     align-items: first;
 }
+
+.movie-selection-input-element {
+    padding-top: 0.5rem;
+}
+
+.filter-and-ticket-bar {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.filter-dropdown {
+    padding-right: 0rem;
+}

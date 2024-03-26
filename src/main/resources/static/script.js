@@ -16,26 +16,25 @@ function process_form_data(form_id) {
     }
 }
 
-function choose_seats() {
+async function verify_purchase() {
     const movie_id = process_form_data("movie-selection-form");
     const ticket_count = document.getElementById("ticket-selection").value;
-    console.log("here");
-    console.log(typeof movie_id);
     if (movie_id !== null) {
-        console.log(movie_id + "  " + ticket_count);
-        // window.location.href = `./loading.html?url=${url}&media_type=${media_type}&converted_from=${converted_from}`;
-        // if (post_selected_movie(movie_id) === true) {
-        //    console.log("success")
-        // }
+
+        const url = BACKEND_URL + '/movies/selection' + '?id=' + movie_id;
+        const response = await fetch(url,  {
+            method: 'POST',
+        });
+
+        if (response.status !== 200) {
+            // display error
+        } else {
+            window.location.href = `./seats.html?ticket_count=${ticket_count}`;
+        }
     }
 }
 
-async function post_selected_movie(movie_id){
-    const url = BACKEND_URL + '/movies/selected' + '?id=' + movie_id;
-    const response = await fetch(url,  {
-        method: 'POST',
-    });
-    return response.status === 200;
+async function get_seating_plan() {
 }
 
 async function load_movie_data() {
@@ -47,7 +46,7 @@ async function load_movie_data() {
     });
 
     if (response.status !== 200) {
-        movies_selection_field.innerText = response.status.toString();
+        // display error
     } else {
         const data = await response.json();
 
@@ -56,7 +55,7 @@ async function load_movie_data() {
         for (const movie of data) {
             const displayed_label = movie.asString;
             displayed_movies +=
-                `<div>
+                `<div class="movie-selection-input-element">
                     <input type="radio" class="media" name="movie" value="${movie.id}"> ${displayed_label}</input>
                 </div>`
         }
@@ -64,4 +63,15 @@ async function load_movie_data() {
     }
 }
 
+function create_filtering_dropdown() {
+    const dropdown_menu = document.getElementById("session-time-selection");
+    let dropdown_content = "";
+    for (let i = 8; i < 23; i++) {
+        if (dropdown_content === "") {
+            dropdown_content += `<option value="-" selected>-</option>`
+        }
+        dropdown_content += `<option value=${i}>${i}</option>`
 
+    }
+    dropdown_menu.innerHTML = dropdown_content;
+}

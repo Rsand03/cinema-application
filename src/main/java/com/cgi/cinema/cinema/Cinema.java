@@ -5,6 +5,7 @@ import com.cgi.cinema.movie.Movie;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class Cinema {
@@ -54,6 +55,15 @@ public class Cinema {
             result = result.stream().filter(x -> x.getLanguage().equals(language)).toList();
         }
         return result;
+    }
+
+    /**
+     * Get movie by id if it is present.
+     * @param id id of the movie
+     * @return Optional object possibly containing a movie
+     * */
+    public Optional<Movie> getMovieById(int id) {
+        return movies.stream().filter(x -> x.getId() == id).findFirst();
     }
 
 }
