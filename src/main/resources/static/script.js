@@ -41,7 +41,7 @@ async function load_filtered_movies_data() {
         method: 'GET'
     });
     if (response.status !== 200) {
-        // display error
+        display_error_message("Something went wrong. \n" + response.status);
     } else {
         const movies_selection_field = document.getElementById('movie-selection-box');
         const data = await response.json();
@@ -54,10 +54,14 @@ async function load_filtered_movies_data() {
                     <input type="radio" class="media" name="movie" value="${movie.id}"> ${displayed_label}</input>
                 </div>`
         }
-        movies_selection_field.innerHTML = displayed_movies;
+        console.log(displayed_movies)
+        if (displayed_movies === "") {
+            display_error_message("No matching movies");
+        } else {
+            display_error_message("");  // stop showing previous error message
+            movies_selection_field.innerHTML = displayed_movies;
+        }
     }
-
-
 }
 
 function process_form_data(form_id) {
@@ -72,21 +76,28 @@ function process_form_data(form_id) {
         } else {
             return null;
         }
-
     }
+}
+
+function display_error_message(message_text) {
+    const error_message_box = document.getElementById("error-message-box");
+    error_message_box.innerText = message_text;
+
 }
 
 async function verify_movie_selection() {
     const movie_id = process_form_data("movie-selection-form");
     const ticket_count = document.getElementById("ticket-selection").value;
 
-    if (movie_id !== null) {
+    if (movie_id === null) {
+        display_error_message("Please select a movie.");
+    } else {
         const url = BACKEND_URL + '/movies/selection' + '?id=' + movie_id;
         const response = await fetch(url,  {
             method: 'POST'
         });
         if (response.status !== 200) {
-            // display error
+            display_error_message("Something went wrong. Please try again.");
         } else {
             window.location.href = `./seats.html?ticket_count=${ticket_count}`;
         }

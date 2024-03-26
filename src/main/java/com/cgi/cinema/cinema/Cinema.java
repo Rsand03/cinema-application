@@ -26,12 +26,12 @@ public class Cinema {
         for (int i = 0; i < amountOfMovies; i++) {
             movies.add(new Movie(
                     "Movie" + i,
-                    genres.get(random.nextInt(0, 3)),
-                    ageRatings.get(random.nextInt(0, 3)),
+                    genres.get(random.nextInt(0, genres.size())),
+                    ageRatings.get(random.nextInt(0, ageRatings.size())),
                     LocalTime.of(
                             random.nextInt(8, 23),
-                            sessionStartMinutes.get(random.nextInt(0, 3))),
-                    languages.get(random.nextInt(0, 3)))
+                            sessionStartMinutes.get(random.nextInt(0, sessionStartMinutes.size()))),
+                    languages.get(random.nextInt(0, languages.size())))
             );
         }
     }
@@ -60,7 +60,7 @@ public class Cinema {
     }
 
     /**
-     * Get movie by id if it is present.
+     * Get movie by its id if the movie present.
      * @param id id of the movie
      * @return Optional object possibly containing a movie
      * */
