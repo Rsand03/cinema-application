@@ -64,8 +64,8 @@ public class CinemaController {
     }
 
     @RequestMapping("/seats")
-    public ResponseEntity<List<Seat>> getRandomSeatingPlan(@RequestParam Integer ticketCount) {
-        Optional<List<Seat>> seatingPlan = cinema.getRandomizedSeatingPlan(ticketCount);
+    public ResponseEntity<List<Map<String, String>>> getRandomSeatingPlan(@RequestParam Integer ticketCount) {
+        Optional<List<Map<String, String>>> seatingPlan = cinema.getRandomizedSeatingPlan(ticketCount);
         if (seatingPlan.isPresent()) {
             return new ResponseEntity<>(seatingPlan.get(), HttpStatus.OK);
         }

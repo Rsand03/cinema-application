@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -17,7 +18,7 @@ public class Cinema {
 
     private static final int MOVIE_COUNT = 30;
 
-
+    // changing the number of seats would currently break front-end
     private static final int SEAT_ROWS_COUNT = 9;  // should be an odd number
     private static final int SEAT_COLUMNS_COUNT = 15;  // should be an odd number
     private static final int CENTRE_ROW_NUMBER = (SEAT_ROWS_COUNT / 2) + 1;  // indexing starts at 1
@@ -87,7 +88,7 @@ public class Cinema {
         return movies.stream().filter(x -> x.getId() == id).findFirst();
     }
 
-    public Optional<List<Seat>> getRandomizedSeatingPlan(int ticketCount) {
+    public Optional<List<Map<String, String>>> getRandomizedSeatingPlan(int ticketCount) {
         // generate random occupation status for each seat
         seats.forEach(Seat::resetOccupationStatusToFree);
         seats.forEach(Seat::setRandomOccupationStatus);
@@ -124,8 +125,16 @@ public class Cinema {
         // marks seats as selected
         if (bestAvailableSeats.isPresent()) {
             bestAvailableSeats.get().forEach(x -> x.setOccupationStatus(SELECTED));
+            List<Map<String, String>> result = new ArrayList<>();
+            for (Seat seat : seats) {
+                HashMap<String, String> seatHashMap = new HashMap<>();
+                seatHashMap.put("seatNumber", String.valueOf(seat.getSeatNumber()));
+                seatHashMap.put("occupationStatus", seat.getOccupationStatus());
+                result.add(seatHashMap);
+            }
+            return Optional.of(result);
         }
-        return bestAvailableSeats;
+        return Optional.empty();
     }
 
     public List<Movie> getFilteredMovies(String genre, String ageRating, String startingHour, String language) {

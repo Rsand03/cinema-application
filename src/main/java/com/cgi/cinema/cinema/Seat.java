@@ -18,7 +18,7 @@ public class Seat {
         OCCUPIED, FREE, SELECTED
     }
 
-    public Seat(int rowNumber, int seatNumber, int distanceFromCenter) {
+    protected Seat(int rowNumber, int seatNumber, int distanceFromCenter) {
         this.rowNumber = rowNumber;
         this.seatNumber = seatNumber;
         this.distanceFromCenter = distanceFromCenter;
@@ -59,5 +59,9 @@ public class Seat {
 
     public int getDistanceFromCenter() {
         return distanceFromCenter;
+    }
+
+    public String getOccupationStatus() {
+        return occupationStatus.toString();
     }
 }

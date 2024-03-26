@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="normalize.css" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen">
     <script src="./script.js"></script>
     <title>Converter</title>
 </head>
@@ -15,7 +15,8 @@
     <div class="main-wrapper">
         <main>
             <h1>Your seating plan:</h1>
-            <div id="seating-plan">
+            <p id="seats-error-message-box" style="color: red"></p>
+            <div class="seating-plan" id="seating-plan">
                 loading...
             </div>
         </main>
@@ -24,7 +25,7 @@
     </footer>
 </div>
 <script>
-    get_seating_plan();
+    load_seating_plan();
 </script>
 </body>
 </html>

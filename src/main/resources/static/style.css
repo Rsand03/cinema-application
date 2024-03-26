@@ -41,7 +41,7 @@ main {
 #movie-selection-box {
     display: flex;
     flex-direction: column;
-    align-items: first;
+    align-items: flex-start;
 }
 
 .movie-selection-input-element {
@@ -56,3 +56,26 @@ main {
 .filter-dropdown {
     padding-right: 0rem;
 }
+
+.seating-plan {
+    display: flex;
+    flex-direction: row;
+    background-color: #194af6;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+
+    box-sizing: border-box;
+    width: auto;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.seat {
+    box-sizing: border-box;
+    width: auto;
+    height: auto;
+    border: 2px dashed rgba(236, 198, 48, 0.5);
+}
+
+

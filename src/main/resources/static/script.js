@@ -112,3 +112,41 @@ function create_time_filtering_dropdown() {
     }
     dropdown_menu.innerHTML = dropdown_content;
 }
+
+async function load_seating_plan() {
+    const params = new URLSearchParams(window.location.search);
+    const ticket_count = params.get('ticket_count');
+
+    const url = BACKEND_URL + "/seats" + "?ticketCount=" + ticket_count;
+    const response = await fetch(url,  {
+        method: 'GET'
+    });
+    if (response.status !== 200) {
+        display_error_message("No available seats.");
+    } else if (response.status !== 666) {
+        const data = await response.json();
+        render_seating_plan(data);
+    }
+}
+
+function render_seating_plan(response_json_data) {
+
+    for (const seat of response_json_data) {
+        const seating_plan_field = document.getElementById('seating-plan');
+        // create form with radio buttons
+        let displayed_seats = "";
+        for (const seat of response_json_data) {
+            const seat_number = seat.seatNumber;
+            let background_color;
+            switch (seat.occupationStatus) {
+                case "FREE": background_color = "Gray"; break;
+                case "OCCUPIED": background_color = "Red"; break;
+                case "SELECTED": background_color = "Green"; break;
+            }
+            displayed_seats +=
+                `<div class="seat" style="background-color: ${background_color}">${seat_number}</div>`
+        }
+        seating_plan_field.innerHTML = displayed_seats;
+    }
+
+}
