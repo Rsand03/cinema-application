@@ -65,14 +65,10 @@ async function load_filtered_movies_data() {
 }
 
 function process_form_data(form_id) {
-    const form = document.getElementById(form_id);
-    const form_data = new FormData(form);
-
     if (form_id === "movie-selection-form") {
         const selected_movie = document.querySelector('input[name="movie"]:checked');
         if (selected_movie !== null) {
-            const chosen_movie_id = selected_movie.value;
-            return chosen_movie_id
+            return selected_movie.value;  // chosen movie id
         } else {
             return null;
         }

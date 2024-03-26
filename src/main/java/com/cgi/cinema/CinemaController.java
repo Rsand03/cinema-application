@@ -1,6 +1,7 @@
 package com.cgi.cinema;
 
 import com.cgi.cinema.cinema.Cinema;
+import com.cgi.cinema.cinema.Seat;
 import com.cgi.cinema.movie.Movie;
 import com.cgi.cinema.user.User;
 import org.springframework.http.HttpStatus;
@@ -24,11 +25,8 @@ public class CinemaController {
 
     @RequestMapping("/movies")
     public List<Map<String, String>> getMovies() {
-        if (cinema.getMovies().isEmpty()) {
-            cinema.generateMovies(30);
-        }
-
         List<Map<String, String>> response = new ArrayList<>();
+
         for (Movie movie : cinema.getMovies()) {
             Map<String, String> movieHashMap = new HashMap<>();
             movieHashMap.put("id", Integer.toString(movie.getId()));
@@ -63,6 +61,15 @@ public class CinemaController {
         } else {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @RequestMapping("/seats")
+    public ResponseEntity<List<Seat>> getRandomSeatingPlan(@RequestParam Integer ticketCount) {
+        Optional<List<Seat>> seatingPlan = cinema.getRandomizedSeatingPlan(ticketCount);
+        if (seatingPlan.isPresent()) {
+            return new ResponseEntity<>(seatingPlan.get(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
