@@ -14,10 +14,13 @@ import java.util.Map;
 @RestController
 public class CinemaController {
 
+    private Cinema cinema = new Cinema();
+
     @RequestMapping("/movies")
     public List<Map<String, String>> getMovies() {
-        Cinema cinema = new Cinema();
-        cinema.generateMovies(30);
+        if (cinema.getMovies().isEmpty()) {
+            cinema.generateMovies(30);
+        }
         List<Map<String, String>> response = new ArrayList<>();
 
         for (Movie movie : cinema.getMovies()) {
