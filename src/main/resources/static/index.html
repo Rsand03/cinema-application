@@ -32,8 +32,8 @@
                         <option value="NC-17">NC-17</option>
                     </select>
 
-                    <label for="session-time-selection">&emsp;Session starting time</label>
-                    <select class="filter-dropdown" id="session-time-selection">
+                    <label for="session-starting-time-selection">&emsp;Session starting time</label>
+                    <select class="filter-dropdown" id="session-starting-time-selection">
                     </select>
 
                     <label for="language-selection">&emsp;Language</label>
@@ -43,6 +43,11 @@
                         <option value="English">English</option>
                         <option value="Russian">Russian</option>
                     </select>
+
+                    <button class="movie-selection-button" type="button"
+                            onclick="load_filtered_movies_data()">
+                        Apply filter
+                    </button>
 
                     <label for="ticket-selection">&emsp;Ticket count</label>
                     <select name="ticket-selection" id="ticket-selection">
@@ -59,7 +64,7 @@
                     </div>
                 </form>
                 <button class="movie-selection-button" type="button"
-                        onclick="verify_purchase()">
+                        onclick="verify_movie_selection()">
                     Choose seats
                 </button>
             </main>
@@ -67,7 +72,7 @@
     </div>
     <script>
             load_movie_data();
-            create_filtering_dropdown();
+            create_time_filtering_dropdown();
     </script>
 </body>
 </html>

@@ -40,18 +40,20 @@ public class Cinema {
         return new ArrayList<>(movies);
     }
 
-    public List<Movie> getFilteredMovies(String genre, String ageRating, Integer hour, String language) {
+    public List<Movie> getFilteredMovies(String genre, String ageRating, String startingHour, String language) {
         List<Movie> result = new ArrayList<>(movies);
-        if (genre != null) {
+        // value "-" means that the specific category must not be filtered
+        if (!"-".equals(genre)) {
             result = result.stream().filter(x -> x.getGenre().equals(genre)).toList();
         }
-        if (ageRating != null) {
+        if (!"-".equals(ageRating)) {
             result = result.stream().filter(x -> x.getAgeRating().equals(ageRating)).toList();
         }
-        if (hour != null) {
+        if (!"-".equals(startingHour)) {
+            int hour = Integer.parseInt(startingHour);
             result = result.stream().filter(x -> x.getSessionStartTime().getHour() > hour).toList();
         }
-        if (hour != null) {
+        if (!"-".equals(language)) {
             result = result.stream().filter(x -> x.getLanguage().equals(language)).toList();
         }
         return result;
