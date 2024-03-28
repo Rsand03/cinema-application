@@ -1,6 +1,9 @@
 package com.cgi.cinema.movie;
 
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Movie {
 
@@ -67,5 +70,12 @@ public class Movie {
                 + String.format("%-15s", ageRating)
                 + String.format("%-15s", sessionStartTime.toString())
                 + String.format("%-10s", language);
+    }
+
+    public Map<String, String> toJson() {
+        Map<String, String> movieHashMap = new HashMap<>();
+        movieHashMap.put("id", Integer.toString(id));
+        movieHashMap.put("asString", this.toString());
+        return movieHashMap;
     }
 }

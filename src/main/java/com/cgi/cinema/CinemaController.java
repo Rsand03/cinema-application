@@ -24,15 +24,9 @@ public class CinemaController {
 
     @RequestMapping("/movies")
     public List<Map<String, String>> getMovies() {
-        List<Map<String, String>> response = new ArrayList<>();
-
-        for (Movie movie : cinema.getMovies()) {
-            Map<String, String> movieHashMap = new HashMap<>();
-            movieHashMap.put("id", Integer.toString(movie.getId()));
-            movieHashMap.put("asString", movie.toString());
-            response.add(movieHashMap);
-        }
-        return response;
+        return cinema.getMovies().stream()
+                .map(Movie::toJson)
+                .toList();
     }
 
     @RequestMapping("/movies/filtered")
@@ -40,15 +34,10 @@ public class CinemaController {
                                                        @RequestParam String ageRating,
                                                        @RequestParam String sessionStartTime,
                                                        @RequestParam String language) {
-        List<Map<String, String>> response = new ArrayList<>();
-
-        for (Movie movie : cinema.getFilteredMovies(genre, ageRating, sessionStartTime, language)) {
-            Map<String, String> movieHashMap = new HashMap<>();
-            movieHashMap.put("id", Integer.toString(movie.getId()));
-            movieHashMap.put("asString", movie.toString());
-            response.add(movieHashMap);
-        }
-        return response;
+        return cinema.getFilteredMovies(genre, ageRating, sessionStartTime, language)
+                .stream()
+                .map(Movie::toJson)
+                .toList();
     }
 
     @RequestMapping("/movies/selection")
