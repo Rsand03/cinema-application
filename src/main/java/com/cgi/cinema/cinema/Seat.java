@@ -7,7 +7,7 @@ import static com.cgi.cinema.cinema.Seat.OccupationStatus.OCCUPIED;
 
 public class Seat {
 
-    private static final double SEAT_OCCUPATION_PROBABILITY = 0.4;
+    private static final double SEAT_BEING_OCCUPIED_PROBABILITY = 0.5;
 
     private final int rowNumber;
     private final int seatNumber;
@@ -43,7 +43,7 @@ public class Seat {
     private OccupationStatus getRandomOccupationStatus() {
         Random randomObject = new Random();
         int randomInt = randomObject.nextInt(0, 100);
-        if (randomInt < 100 * SEAT_OCCUPATION_PROBABILITY) {
+        if (randomInt > 100 * SEAT_BEING_OCCUPIED_PROBABILITY) {
             return FREE;
         };
         return OCCUPIED;

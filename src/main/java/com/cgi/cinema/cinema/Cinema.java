@@ -42,11 +42,11 @@ public class Cinema {
     private void generateSeats() {
         for (int i = 0; i < SEAT_COUNT; i++) {
             // columnNumber indexing starts at 1
-            int columnNumber = (i / SEAT_COLUMNS_COUNT) + 1;
+            int columnNumber = (i % SEAT_COLUMNS_COUNT) + 1;
             int distanceFromCenterColumn = Math.abs(CENTRE_COLUMN_NUMBER - columnNumber);
 
             // rowNumber indexing starts at 1
-            int rowNumber = (i / SEAT_ROWS_COUNT) + 1;
+            int rowNumber = (i / SEAT_COLUMNS_COUNT) + 1;
             int distanceFromCenterRow = Math.abs(CENTRE_ROW_NUMBER - rowNumber);
 
             int distanceFromCenter = distanceFromCenterColumn + distanceFromCenterRow;

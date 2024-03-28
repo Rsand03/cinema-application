@@ -53,29 +53,22 @@ main {
     padding-bottom: 2rem;
 }
 
-.filter-dropdown {
-    padding-right: 0rem;
-}
-
 .seating-plan {
-    display: flex;
-    flex-direction: row;
-    background-color: #194af6;
-    grid-template-columns: auto;
-    grid-template-rows: auto;
-
-    box-sizing: border-box;
-    width: auto;
-    height: auto;
-    margin-left: auto;
-    margin-right: auto;
+    display: grid;
+    grid-template-columns: repeat(15, auto);
+    grid-auto-flow: row;
+    direction: ltr;
+    grid-row-gap: 0.5rem;
+    grid-column-gap: 0.5rem;
 }
 
 .seat {
-    box-sizing: border-box;
-    width: auto;
-    height: auto;
-    border: 2px dashed rgba(236, 198, 48, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.3rem;
 }
 
 
