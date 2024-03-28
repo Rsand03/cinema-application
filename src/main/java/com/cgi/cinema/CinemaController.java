@@ -1,7 +1,6 @@
 package com.cgi.cinema;
 
 import com.cgi.cinema.cinema.Cinema;
-import com.cgi.cinema.cinema.Seat;
 import com.cgi.cinema.movie.Movie;
 import com.cgi.cinema.user.User;
 import org.springframework.http.HttpStatus;

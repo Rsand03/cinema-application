@@ -62,6 +62,10 @@ public class Movie {
 
     @Override
     public String toString() {
-        return title + "    " + genre + "    " + ageRating + "    " + sessionStartTime.toString() + "  " + language;
+        return String.format("%-15s", title)
+                + String.format("%-15s", genre)
+                + String.format("%-15s", ageRating)
+                + String.format("%-15s", sessionStartTime.toString())
+                + String.format("%-10s", language);
     }
 }
