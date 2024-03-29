@@ -97,6 +97,12 @@ function displayErrorMessage(message_text) {
 }
 
 
+function displaySeatErrorMessage(message_text) {
+    const errorMessageBox = document.getElementById("seats-error-message-box");
+    errorMessageBox.innerText = message_text;
+}
+
+
 async function verifyMovieSelection() {
     const movieId = processFormData("movie-selection-form");
     const ticketCount = document.getElementById("ticket-selection").value;
@@ -139,10 +145,17 @@ async function loadSeatingPlan() {
     const response = await fetch(url,  {
         method: 'GET'
     });
-    if (response.status !== 200) {
-        displayErrorMessage("No available seats.");
-    } else if (response.status !== 666) {
-        const data = await response.json();
+
+    const data = await response.json();
+    if (response.status !== 200 && response.status !== 206) {
+        console.log(response.status);
+        displaySeatErrorMessage("No available seats.");
+    } else if (response.status === 206) {
+        console.log("partial");
+        displaySeatErrorMessage("Unfortunately no neighbouring seats were available.");
+        renderSeatingPlan(data);
+    } else {
+        console.log("neighbouring");
         renderSeatingPlan(data);
     }
 }

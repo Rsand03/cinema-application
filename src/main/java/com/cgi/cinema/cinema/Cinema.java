@@ -33,11 +33,18 @@ public class Cinema {
     private final List<Movie> movies = new ArrayList<>();
     private final List<Seat> seats = new ArrayList<>();
 
+    /**
+     * Initialize Cinema class by generating movies and a seating plan.
+     * */
     public Cinema() {
         generateMovies(MOVIE_COUNT);
         generateSeats();
     }
 
+    /**
+     * Generate a seating plan for the cinema.
+     * All seats have a seatNumber and a rowNumber.
+     * */
     private void generateSeats() {
         for (int i = 0; i < SEAT_COUNT; i++) {
             int columnNumber = (i % SEAT_COLUMNS_COUNT) + 1; // columnNumber indexing starts at 1
@@ -53,6 +60,8 @@ public class Cinema {
 
     /**
      * Generate and save new movies with randomized parameters.
+     * TODO: Improve movie title generation.
+     * TODO: Make movie's age rating and genre dependant on the title (possibly by using a HashMap constant).
      * @param amountOfMovies amount of movies to be created
      * */
     public void generateMovies(int amountOfMovies) {
@@ -70,22 +79,14 @@ public class Cinema {
         }
     }
 
-    public List<Movie> getMovies() {
-        return movies.stream()
-                .sorted(Comparator.comparing(Movie::getSessionStartTime))
-                .toList();
-    }
-
     /**
-     * Get movie by its id if the movie present.
-     * @param id id of the movie
-     * @return Optional object possibly containing a movie
+     * Generate a random occupation status for all seats.
+     * Then find and select the best available set of neighbouring seats.
+     * Neighbouring eats must be next to each other and in the same row.
+     * @param ticketCount amount of seats to be selected
+     * @return list containing json data about all seats
      * */
-    public Optional<Movie> getMovieById(int id) {
-        return movies.stream().filter(x -> x.getId() == id).findFirst();
-    }
-
-    public Optional<List<Map<String, String>>> getRandomizedSeatingPlan(int ticketCount) {
+    public Optional<List<Map<String, String>>> getNeighbouringSeats(int ticketCount) {
         // generate random occupation status for each seat
         seats.forEach(Seat::setRandomOccupationStatus);
 
@@ -128,6 +129,35 @@ public class Cinema {
         return Optional.empty();
     }
 
+    /**
+     * Select the best available seats, even when they are not neighbouring.
+     * TODO: Try to get smaller amount of neighbouring seats instead of any (closest to center) seats.
+     * @param ticketCount amount of seats to be selected
+     * @return list containing json data about all seats
+     * */
+    public Optional<List<Map<String, String>>> getAnySeats(int ticketCount) {
+        List<Seat> result = seats.stream()
+                .filter(Seat::isFree)
+                .sorted(Comparator.comparing(Seat::getDistanceFromCenter))
+                .toList();
+        if (result.size() >= ticketCount) {
+            result.subList(0, ticketCount).forEach(x -> x.setOccupationStatus(SELECTED));  // select best seats
+            return Optional.of(seats.stream()
+                    .map(Seat::toJson)
+                    .toList());
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Filter available movies by genre, age rating, starting time and language.
+     * TODO: Make front-end dropdown menus (that contain filtering options) dynamic.
+     * @param genre required genre
+     * @param ageRating required age rating
+     * @param startingHour minimum starting time
+     * @param language required language
+     * @return List containing filtered movies.
+     * */
     public List<Movie> getFilteredMovies(String genre, String ageRating, String startingHour, String language) {
         List<Movie> result = new ArrayList<>(movies);
         // value "-" means that the specific category must not be filtered
@@ -152,6 +182,26 @@ public class Cinema {
                     .filter(x -> x.getLanguage().equals(language))
                     .toList();
         }
-        return result;
+        return result.stream()
+                .sorted(Comparator.comparing(Movie::getSessionStartTime))
+                .toList();
+    }
+
+    /**
+     * Get movie by its id if the movie present.
+     * @param id id of the movie
+     * @return Optional object possibly containing a movie
+     * */
+    public Optional<Movie> getMovieById(int id) {
+        return movies.stream().filter(x -> x.getId() == id).findFirst();
+    }
+
+    /**
+     * Get movies sorted by session starting time.
+     * */
+    public List<Movie> getMovies() {
+        return movies.stream()
+                .sorted(Comparator.comparing(Movie::getSessionStartTime))
+                .toList();
     }
 }

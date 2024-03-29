@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,7 +44,7 @@ public class CinemaController {
                 .map(Movie::toJson)
                 .toList();
         if (result.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -63,11 +61,16 @@ public class CinemaController {
 
     @RequestMapping("/seats")
     public ResponseEntity<List<Map<String, String>>> getRandomSeatingPlan(@RequestParam Integer ticketCount) {
-        Optional<List<Map<String, String>>> seatingPlan = cinema.getRandomizedSeatingPlan(ticketCount);
-        if (seatingPlan.isPresent()) {
-            return new ResponseEntity<>(seatingPlan.get(), HttpStatus.OK);
+        Optional<List<Map<String, String>>> neighbouringSeats = cinema.getNeighbouringSeats(ticketCount);
+        if (neighbouringSeats.isPresent()) {
+            return new ResponseEntity<>(neighbouringSeats.get(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        Optional<List<Map<String, String>>> anySeats = cinema.getAnySeats(ticketCount);
+        if (anySeats.isPresent()) {
+            return new ResponseEntity<>(anySeats.get(), HttpStatus.PARTIAL_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

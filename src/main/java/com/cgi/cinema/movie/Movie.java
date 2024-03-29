@@ -78,6 +78,10 @@ public class Movie {
                 + String.format("%-10s", language);
     }
 
+    /**
+     * Get movie data in json format.
+     * @return movie id and all info as a string
+     * */
     public Map<String, String> toJson() {
         Map<String, String> movieHashMap = new HashMap<>();
         movieHashMap.put("id", Integer.toString(id));
