@@ -62,6 +62,10 @@ main {
     border-radius: 0.4rem;
 }
 
+.movie-selection-input-element:hover {
+    transform: scale(1.05);
+}
+
 .filter-and-ticket-bar {
     margin: 1rem;
     padding: 1rem;
@@ -78,6 +82,21 @@ main {
     padding: 0.5rem;
     background-color: #d9d9d9;
     border-radius: 0.3rem;
+}
+
+.ticket-buying-button {
+    background-color: green;
+    border: none;
+    color: white;
+    padding: 0.3rem;
+    text-align: center;
+    display: inline-block;
+    border-radius: 0.3rem;
+    margin-left: 1rem;
+}
+
+.ticket-buying-button:hover {
+    transform: scale(1.05);
 }
 
 .movie-selection-options-container {

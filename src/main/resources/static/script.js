@@ -64,9 +64,11 @@ function renderMoviesForm(movieData) {
         const displayedLabel = movie.asString;
         displayedMovies +=
             `<div class="movie-selection-input-element">
-                    <input type="radio" class="media" name="movie" value="${movie.id}" style="margin-left: 1rem">
+                <input type="radio" class="media" id="movie${movie.id}" name="movie" value="${movie.id}" style="margin-left: 1rem">
+                <label for="movie${movie.id}">
                     <pre style="font-family: Roboto Mono, monospace; margin: 0">${displayedLabel}</pre>
-                </div>`
+                </label>
+            </div>`
     }
     if (displayedMovies === "") {
         displayErrorMessage("No matching movies");
