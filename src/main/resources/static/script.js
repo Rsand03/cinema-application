@@ -1,9 +1,12 @@
 const BACKEND_URL = 'http://localhost:8080';
 
 
-async function load_movie_data() {
+/**
+ * Requests all movie data from back-end.
+ * If successful, renders the movie selection form with renderMovieForm() function.
+ */
+async function loadMovieData() {
 
-    const movies_selection_field = document.getElementById('movie-selection-box');
     const url = BACKEND_URL + '/movies';
     const response = await fetch(url, {
         method: 'GET',
@@ -14,105 +17,211 @@ async function load_movie_data() {
     } else {
         const data = await response.json();
         // create form with radio buttons
-        let displayed_movies = "";
-        for (const movie of data) {
-            const displayed_label = movie.asString;
-            displayed_movies +=
-                `<div class="movie-selection-input-element">
-                    <input type="radio" class="media" name="movie" value="${movie.id}"> ${displayed_label}</input>
-                </div>`
-        }
-        movies_selection_field.innerHTML = displayed_movies;
+        renderMoviesForm(data);
     }
 }
 
-async function load_filtered_movies_data() {
+
+/**
+ * Requests data of movies that match the filtering criteria.
+ * If successful, renders the movie selection form with renderMovieForm() function.
+ * Filtering options:
+ * genre, age rating, "later than" session starting time, language.
+ */
+async function loadFilteredMoviesData() {
     const genre = document.getElementById("genre-selection").value;
-    const age_rating = document.getElementById("age-rating-selection").value;
-    const session_starting_time = document.getElementById("session-starting-time-selection").value;
+    const ageRating = document.getElementById("age-rating-selection").value;
+    const sessionStartingTime = document.getElementById("session-starting-time-selection").value;
     const language = document.getElementById("language-selection").value;
 
     const url = BACKEND_URL + "/movies/filtered" +
         "?genre=" + genre +
-        "&ageRating=" + age_rating +
-        "&sessionStartTime=" + session_starting_time +
+        "&ageRating=" + ageRating +
+        "&sessionStartTime=" + sessionStartingTime +
         "&language=" + language;
     const response = await fetch(url,{
         method: 'GET'
     });
     if (response.status !== 200) {
-        display_error_message("Something went wrong. \n" + response.status);
+        displayErrorMessage("Something went wrong." + response.status);
     } else {
-        const movies_selection_field = document.getElementById('movie-selection-box');
         const data = await response.json();
         // create form with radio buttons
-        let displayed_movies = "";
-        for (const movie of data) {
-            const displayed_label = movie.asString;
-            displayed_movies +=
-                `<div class="movie-selection-input-element">
-                    <input type="radio" class="media" name="movie" value="${movie.id}"> ${displayed_label}</input>
-                </div>`
-        }
-        console.log(displayed_movies)
-        if (displayed_movies === "") {
-            display_error_message("No matching movies");
-        } else {
-            display_error_message("");  // stop showing previous error message
-            movies_selection_field.innerHTML = displayed_movies;
-        }
+        renderMoviesForm(data);
     }
 }
 
-function process_form_data(form_id) {
-    const form = document.getElementById(form_id);
-    const form_data = new FormData(form);
 
+/**
+ * Requests recommended movies data from back-end based on the current user.
+ * If successful, renders the movie selection form with renderMovieForm() function.
+ */
+async function loadRecommendedMovies() {
+    const url = BACKEND_URL + "/movies/recommended"
+    const response = await fetch(url,{
+        method: 'GET'
+    });
+    if (response.status !== 200) {
+        displayErrorMessage("Unable to recommend movies.");
+    } else {
+        const data = await response.json();
+        // create form with radio buttons
+        renderMoviesForm(data);
+    }
+}
+
+
+/**
+ * Renders the movie selection form.
+ * If there are no movies to render, displays error message.
+ * @param {list} movieData movie options to be rendered
+ */
+function renderMoviesForm(movieData) {
+    const moviesSelectionField = document.getElementById('movie-selection-container');
+    let displayedMovies = "";
+    for (const movie of movieData) {
+        const displayedLabel = movie.asString;
+        displayedMovies +=
+            `<div class="movie-selection-input-element">
+                <input type="radio" class="media" id="movie${movie.id}" name="movie" value="${movie.id}" style="margin-left: 1rem">
+                <label for="movie${movie.id}">
+                    <pre style="font-family: Roboto Mono, monospace; margin: 0">${displayedLabel}</pre>
+                </label>
+            </div>`
+    }
+    if (displayedMovies === "") {
+        displayErrorMessage("No matching movies");
+    } else {
+        displayErrorMessage("");  // stop showing previous error message
+        moviesSelectionField.innerHTML = displayedMovies;
+    }
+}
+
+
+/**
+ * Process data of a specified form.
+ * Retrieves selected option data.
+ * @param {string} form_id id of the form
+ */
+function processFormData(form_id) {
     if (form_id === "movie-selection-form") {
-        const selected_movie = document.querySelector('input[name="movie"]:checked');
-        if (selected_movie !== null) {
-            const chosen_movie_id = selected_movie.value;
-            return chosen_movie_id
+        const selectedMovie = document.querySelector('input[name="movie"]:checked');
+        if (selectedMovie !== null) {
+            return selectedMovie.value;  // selected movie id
         } else {
             return null;
         }
     }
 }
 
-function display_error_message(message_text) {
-    const error_message_box = document.getElementById("error-message-box");
-    error_message_box.innerText = message_text;
 
+/**
+ * Display error message on home page.
+ * @param {string} message_text text to display
+ */
+function displayErrorMessage(message_text) {
+    const errorMessageBox = document.getElementById("error-message-box");
+    errorMessageBox.innerText = message_text;
 }
 
-async function verify_movie_selection() {
-    const movie_id = process_form_data("movie-selection-form");
-    const ticket_count = document.getElementById("ticket-selection").value;
 
-    if (movie_id === null) {
-        display_error_message("Please select a movie.");
+/**
+ * Display error message on seating plan page.
+ * @param {string} message_text text to display
+ */
+function displaySeatErrorMessage(message_text) {
+    const errorMessageBox = document.getElementById("seats-error-message-box");
+    errorMessageBox.innerText = message_text;
+}
+
+
+/**
+ * Verify the selection of a movie and pass ticket count to seating page.
+ * Back-end adds the movie to user's watching history.
+ * Uses processFormData() to get the id of the selected movie.
+ */
+async function verifyMovieSelection() {
+    const movieId = processFormData("movie-selection-form");
+    const ticketCount = document.getElementById("ticket-selection").value;
+
+    if (movieId === null) {
+        displayErrorMessage("Please select a movie.");
     } else {
-        const url = BACKEND_URL + '/movies/selection' + '?id=' + movie_id;
+        const url = BACKEND_URL + '/movies/selection' + '?id=' + movieId;
         const response = await fetch(url,  {
             method: 'POST'
         });
         if (response.status !== 200) {
-            display_error_message("Something went wrong. Please try again.");
+            displayErrorMessage("Something went wrong. Please try again.");
         } else {
-            window.location.href = `./seats.html?ticket_count=${ticket_count}`;
+            window.location.href = `./seats.html?ticket_count=${ticketCount}`;
         }
     }
 }
 
-function create_time_filtering_dropdown() {
-    const dropdown_menu = document.getElementById("session-starting-time-selection");
-    let dropdown_content = "";
+
+/**
+ * Generates the content of a filtering options dropdown menu.
+ * TODO: Make all dropdown menus dynamic by requesting the content data from back-end.
+ */
+function createTimeFilteringDropdown() {
+    const dropdownMenu = document.getElementById("session-starting-time-selection");
+    let dropdownContent = "";
     for (let i = 8; i < 23; i++) {
-        if (dropdown_content === "") {
-            dropdown_content += `<option value="-" selected>-</option>`
+        if (dropdownContent === "") {
+            dropdownContent += `<option value="-" selected>-</option>`
         }
         // converting value to string enables easier data processing in back-end movies filtering function
-        dropdown_content += `<option value=${i.toString()}>${i}</option>`
+        dropdownContent += `<option value=${i.toString()}>${i}</option>`
     }
-    dropdown_menu.innerHTML = dropdown_content;
+    dropdownMenu.innerHTML = dropdownContent;
+}
+
+
+/**
+ * Requests seating plan data from back-end.
+ * Displays notification in case no neighbouring seats are available or no seats are available at all.
+ */
+async function loadSeatingPlan() {
+    const params = new URLSearchParams(window.location.search);
+    const ticketCount = params.get('ticket_count');
+
+    const url = BACKEND_URL + "/seats" + "?ticketCount=" + ticketCount;
+    const response = await fetch(url,  {
+        method: 'GET'
+    });
+
+    const data = await response.json();
+    if (response.status !== 200 && response.status !== 206) {
+        displaySeatErrorMessage("No available seats.");
+    } else if (response.status === 206) {
+        displaySeatErrorMessage("Unfortunately no neighbouring seats were available.");
+        renderSeatingPlan(data);
+    } else {
+        renderSeatingPlan(data);
+    }
+}
+
+/**
+ * Renders the seating plan based on seating plan data.
+ * @param {list} seatingPlanData seating plan data in json format
+ */
+function renderSeatingPlan(seatingPlanData) {
+    for (const seat of seatingPlanData) {
+        const seatingPlanField = document.getElementById('seating-plan');
+        // create form with radio buttons
+        let displayedSeats = "";
+
+        for (const seat of seatingPlanData) {
+            const seatNumber = seat.seatNumber;
+            let background_color;
+            switch (seat.occupationStatus) {
+                case "FREE": background_color = "lightgray"; break;
+                case "OCCUPIED": background_color = "Red"; break;
+                case "SELECTED": background_color = "Green"; break;
+            }
+            displayedSeats += `<div class="seat" style="background-color: ${background_color}">${seatNumber}</div>`
+        }
+        seatingPlanField.innerHTML = displayedSeats;
+    }
 }

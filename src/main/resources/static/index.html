@@ -13,7 +13,7 @@
         <div class="main-wrapper">
             <main>
                 <h1>Welcome to cinema</h1>
-                <div class="filter-and-ticket-bar">
+                <div class="filtering-options-container">
                     <label for="genre-selection">Genre</label>
                     <select class="filter-dropdown" id="genre-selection">
                         <option value="-" selected>-</option>
@@ -32,7 +32,7 @@
                         <option value="NC-17">NC-17</option>
                     </select>
 
-                    <label for="session-starting-time-selection">&emsp;Session starting time</label>
+                    <label for="session-starting-time-selection">&emsp;Sessions later than</label>
                     <select class="filter-dropdown" id="session-starting-time-selection">
                     </select>
 
@@ -44,12 +44,13 @@
                         <option value="Russian">Russian</option>
                     </select>
 
-                    <button class="movie-selection-button" type="button"
-                            onclick="load_filtered_movies_data()">
+                    <button class="movie-selection-button" type="button" style="margin-left: 2rem"
+                            onclick="loadFilteredMoviesData()">
                         Apply filter
                     </button>
-
-                    <label for="ticket-selection">&emsp;Ticket count</label>
+                </div>
+                <div class="ticket-buying-container">
+                    <label for="ticket-selection">Ticket count </label>
                     <select name="ticket-selection" id="ticket-selection">
                         <option value=1 selected>1</option>
                         <option value=2>2</option>
@@ -57,23 +58,28 @@
                         <option value=4>4</option>
                         <option value=5>5</option>
                     </select>
+                    <button class="ticket-buying-button" type="button"
+                            onclick="verifyMovieSelection()">
+                        BUY
+                    </button>
                 </div>
                 <p id="error-message-box" style="color: red"></p>
+                <div class="movie-selection-options-container">
+                    <p style="margin-right: 15rem"> Select a movie:</p>
+                    <button onclick="loadRecommendedMovies()">Recommended movies</button>
+                    <button onclick="loadMovieData()">All movies</button>
+                </div>
                 <form action="submit" id="movie-selection-form">
-                    <div id="movie-selection-box">
+                    <div id="movie-selection-container">
                         loading...
                     </div>
                 </form>
-                <button class="movie-selection-button" type="button"
-                        onclick="verify_movie_selection()">
-                    Choose seats
-                </button>
             </main>
         </div>
     </div>
     <script>
-            load_movie_data();
-            create_time_filtering_dropdown();
+            loadMovieData();
+            createTimeFilteringDropdown();
     </script>
 </body>
 </html>

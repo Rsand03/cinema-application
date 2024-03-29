@@ -4,27 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="normalize.css" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="style.css" media="screen">
     <script src="./script.js"></script>
     <title>Converter</title>
 </head>
 <body>
-<div class="page-wrapper">
-    <nav>
-    </nav>
-    <div class="main-wrapper">
-        <main>
-            <h1>Your seating plan:</h1>
-            <div id="seating-plan">
-                loading...
-            </div>
-        </main>
+    <div class="page-wrapper">
+        <div class="main-wrapper">
+            <main>
+                <h1>Your seating plan:</h1>
+                <p id="seats-error-message-box" style="color: red; margin-bottom: 2rem"></p>
+                <div class="seating-plan" id="seating-plan">
+                </div>
+                <a href="http://localhost:8080/" style="margin: 4rem">
+                    <button>Back</button>
+                </a>
+            </main>
+        </div>
     </div>
-    <footer>
-    </footer>
-</div>
 <script>
-    get_seating_plan();
+    loadSeatingPlan();
 </script>
 </body>
 </html>

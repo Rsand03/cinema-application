@@ -38,21 +38,91 @@ main {
     width: 80%;
 }
 
-#movie-selection-box {
+.movie-selection-button {
+    margin-left: 1rem;
+}
+
+#movie-selection-container {
     display: flex;
     flex-direction: column;
-    align-items: first;
+    align-items: flex-start;
+    margin-bottom: 5rem;
 }
 
 .movie-selection-input-element {
-    padding-top: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    column-gap: 1rem;
+    height: auto;
+    padding: 0.1rem;
+    margin: 0.2rem;
+    background-color: #d9d9d9;
+    border-radius: 0.4rem;
 }
 
-.filter-and-ticket-bar {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+.movie-selection-input-element:hover {
+    transform: scale(1.05);
 }
 
-.filter-dropdown {
-    padding-right: 0rem;
+.filtering-options-container {
+    margin: 1rem;
+    padding: 1rem;
+    background-color: #878787;
+    border-radius: 0.3rem;
 }
+
+.ticket-buying-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    column-gap: 0.3rem;
+    padding: 0.5rem;
+    background-color: #d9d9d9;
+    border-radius: 0.3rem;
+}
+
+.ticket-buying-button {
+    background-color: green;
+    border: none;
+    color: white;
+    padding: 0.3rem;
+    text-align: center;
+    display: inline-block;
+    border-radius: 0.3rem;
+    margin-left: 1rem;
+}
+
+.ticket-buying-button:hover {
+    transform: scale(1.05);
+}
+
+.movie-selection-options-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    column-gap: 1rem;
+}
+
+.seating-plan {
+    display: grid;
+    grid-template-columns: repeat(15, auto);
+    grid-auto-flow: row;
+    direction: ltr;
+    grid-row-gap: 0.5rem;
+    grid-column-gap: 0.5rem;
+}
+
+.seat {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.3rem;
+}
+
+
