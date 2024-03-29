@@ -1,8 +1,8 @@
 package com.cgi.cinema.cinema;
 
-import com.cgi.cinema.movie.Movie;
+import com.cgi.cinema.session.Movie;
+import com.cgi.cinema.session.Session;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import static com.cgi.cinema.cinema.Seat.OccupationStatus.SELECTED;
 
 public class Cinema {
 
-    private static final int MOVIE_COUNT = 30;
+    private static final int SESSION_COUNT = 35;
 
     // changing the number of seats would currently break front-end
     private static final int SEAT_ROWS_COUNT = 9;  // should be an odd number
@@ -25,20 +25,38 @@ public class Cinema {
     private static final int CENTRE_COLUMN_NUMBER = (SEAT_COLUMNS_COUNT / 2) + 1;  // indexing starts at 1
     private static final int SEAT_COUNT = SEAT_COLUMNS_COUNT * SEAT_ROWS_COUNT;
 
-    private final List<String> genres = Movie.genres;
-    private final List<String> ageRatings = Movie.ageRatings;
-    private final List<Integer> sessionStartMinutes = Movie.sessionStartMinutes;
-    private final List<String> languages = Movie.languages;
-
     private final List<Movie> movies = new ArrayList<>();
+    private final List<Session> sessions = new ArrayList<>();
     private final List<Seat> seats = new ArrayList<>();
 
     /**
      * Initialize Cinema class by generating movies and a seating plan.
      * */
     public Cinema() {
-        generateMovies(MOVIE_COUNT);
+        generateMovies();
+        generateSessions(SESSION_COUNT);
         generateSeats();
+    }
+
+    /**
+     * Generate and save new movies with randomized parameters.
+     * */
+    public void generateMovies() {
+        for (String movieTitle : Movie.movieTitles) {
+            movies.add(new Movie(movieTitle));
+        }
+    }
+
+    /**
+     * Generate and save new sessions with randomized parameters.
+     * @param amountOfSessions amount of sessions to be created
+     * */
+    public void generateSessions(int amountOfSessions) {
+        Random random = new Random();
+        for (int i = 0; i < amountOfSessions; i++) {
+            Movie movieOfTheSession = movies.get(random.nextInt(0, movies.size()));
+            sessions.add(new Session(movieOfTheSession));
+        }
     }
 
     /**
@@ -55,27 +73,6 @@ public class Cinema {
 
             int distanceFromCenter = distanceFromCenterColumn + distanceFromCenterRow;
             seats.add(new Seat(rowNumber, i + 1, distanceFromCenter));  // seatNumber indexing starts at 1
-        }
-    }
-
-    /**
-     * Generate and save new movies with randomized parameters.
-     * TODO: Improve movie title generation.
-     * TODO: Make movie's age rating and genre dependant on the title (possibly by using a HashMap constant).
-     * @param amountOfMovies amount of movies to be created
-     * */
-    public void generateMovies(int amountOfMovies) {
-        Random random = new Random();
-        for (int i = 0; i < amountOfMovies; i++) {
-            movies.add(new Movie(
-                    "Movie" + i,
-                    genres.get(random.nextInt(0, genres.size())),
-                    ageRatings.get(random.nextInt(0, ageRatings.size())),
-                    LocalTime.of(
-                            random.nextInt(8, 23),  // hours
-                            sessionStartMinutes.get(random.nextInt(0, sessionStartMinutes.size()))),  // minutes
-                    languages.get(random.nextInt(0, languages.size())))
-            );
         }
     }
 
@@ -158,8 +155,8 @@ public class Cinema {
      * @param language required language
      * @return List containing filtered movies.
      * */
-    public List<Movie> getFilteredMovies(String genre, String ageRating, String startingHour, String language) {
-        List<Movie> result = new ArrayList<>(movies);
+    public List<Session> getFilteredSessions(String genre, String ageRating, String startingHour, String language) {
+        List<Session> result = new ArrayList<>(sessions);
         // value "-" means that the specific category must not be filtered
         if (!"-".equals(genre)) {  // genre
             result = result.stream()
@@ -183,25 +180,25 @@ public class Cinema {
                     .toList();
         }
         return result.stream()
-                .sorted(Comparator.comparing(Movie::getSessionStartTime))
+                .sorted(Comparator.comparing(Session::getSessionStartTime))
                 .toList();
     }
 
     /**
-     * Get movie by its id if the movie present.
+     * Get session by its id if the session present.
      * @param id id of the movie
      * @return Optional object possibly containing a movie
      * */
-    public Optional<Movie> getMovieById(int id) {
-        return movies.stream().filter(x -> x.getId() == id).findFirst();
+    public Optional<Session> getSessionById(int id) {
+        return sessions.stream().filter(x -> x.getId() == id).findFirst();
     }
 
     /**
-     * Get movies sorted by session starting time.
+     * Get sessions sorted by session starting time.
      * */
-    public List<Movie> getMovies() {
-        return movies.stream()
-                .sorted(Comparator.comparing(Movie::getSessionStartTime))
+    public List<Session> getSessions() {
+        return sessions.stream()
+                .sorted(Comparator.comparing(Session::getSessionStartTime))
                 .toList();
     }
 }

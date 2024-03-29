@@ -1,19 +1,18 @@
-package com.cgi.cinema.movie;
+package com.cgi.cinema.session;
 
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
-public class Movie {
+public class Session {
 
     // back-end can handle modifying these lists, but front-end has static dropdown menus
-    public static final List<String> genres = List.of("Comedy", "Action", "Horror", "Nature");
-    public static final List<String> ageRatings = List.of("G", "PG", "PG-13", "NC-17");
     public static final List<Integer> sessionStartMinutes = List.of(0, 15, 30, 45);
     public static final List<String> languages = List.of("Estonian", "English", "Russian");
 
-    private final String title;
+    private final String movieTitle;
     private final String genre;
     private final String ageRating;
     private final LocalTime sessionStartTime;
@@ -22,24 +21,25 @@ public class Movie {
     private static int nextId = 1;
 
     /**
-     * Initialize Movie class.
-     * @param title movie title
-     * @param genre movie genre
-     * @param ageRating age rating of the movie
-     * @param sessionStart LocalTime representing when the session begins
-     * @param language movie language
+     * Initialize Session with a movie and random session parameters.
+     * TODO: Add a date to each session.
+     * @param movie movie of the session
      * */
-    public Movie(String title, String genre, String ageRating, LocalTime sessionStart, String language) {
-        this.title = title;
-        this.genre = genre;
-        this.ageRating = ageRating;
-        this.sessionStartTime = sessionStart;
-        this.language = language;
+    public Session(Movie movie) {
+        Random random = new Random();
+        this.movieTitle = movie.getTitle();
+        this.genre = movie.getGenre();
+        this.ageRating = movie.getAgeRating();
+
+        this.sessionStartTime = LocalTime.of(
+                random.nextInt(8, 23),  // hours
+                sessionStartMinutes.get(random.nextInt(0, sessionStartMinutes.size())));  // minutes
+        this.language = languages.get(random.nextInt(0, languages.size()));
         this.id = this.getNextId();
     }
 
     /**
-     * Calculate id for the next movie.
+     * Calculate id for the next session.
      * */
     private int getNextId() {
         return nextId++;
@@ -47,10 +47,8 @@ public class Movie {
 
     public int getId() {
         return id;
-    }
-
-    public String getTitle() {
-        return title;
+    }public String getMovieTitle() {
+        return movieTitle;
     }
 
     public String getGenre() {
@@ -71,7 +69,7 @@ public class Movie {
 
     @Override
     public String toString() {
-        return String.format("%-15s", title)
+        return String.format("%-17s", movieTitle)
                 + String.format("%-15s", genre)
                 + String.format("%-15s", ageRating)
                 + String.format("%-15s", sessionStartTime.toString())
@@ -79,8 +77,8 @@ public class Movie {
     }
 
     /**
-     * Get movie data in json format.
-     * @return movie id and all info as a string
+     * Get session and movie data in json format.
+     * @return session id and all info as a string
      * */
     public Map<String, String> toJson() {
         Map<String, String> movieHashMap = new HashMap<>();

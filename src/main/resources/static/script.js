@@ -74,7 +74,7 @@ async function loadRecommendedMovies() {
 /**
  * Renders the movie selection form.
  * If there are no movies to render, displays error message.
- * @param movieData movie options to be rendered
+ * @param {list} movieData movie options to be rendered
  */
 function renderMoviesForm(movieData) {
     const moviesSelectionField = document.getElementById('movie-selection-container');
@@ -101,7 +101,7 @@ function renderMoviesForm(movieData) {
 /**
  * Process data of a specified form.
  * Retrieves selected option data.
- * @param form_id id of the form
+ * @param {string} form_id id of the form
  */
 function processFormData(form_id) {
     if (form_id === "movie-selection-form") {
@@ -117,7 +117,7 @@ function processFormData(form_id) {
 
 /**
  * Display error message on home page.
- * @param message_text text to display
+ * @param {string} message_text text to display
  */
 function displayErrorMessage(message_text) {
     const errorMessageBox = document.getElementById("error-message-box");
@@ -127,7 +127,7 @@ function displayErrorMessage(message_text) {
 
 /**
  * Display error message on seating plan page.
- * @param message_text text to display
+ * @param {string} message_text text to display
  */
 function displaySeatErrorMessage(message_text) {
     const errorMessageBox = document.getElementById("seats-error-message-box");
@@ -162,6 +162,7 @@ async function verifyMovieSelection() {
 
 /**
  * Generates the content of a filtering options dropdown menu.
+ * TODO: Make all dropdown menus dynamic by requesting the content data from back-end.
  */
 function createTimeFilteringDropdown() {
     const dropdownMenu = document.getElementById("session-starting-time-selection");
@@ -203,7 +204,7 @@ async function loadSeatingPlan() {
 
 /**
  * Renders the seating plan based on seating plan data.
- * @param seatingPlanData seating plan data in json format
+ * @param {list} seatingPlanData seating plan data in json format
  */
 function renderSeatingPlan(seatingPlanData) {
     for (const seat of seatingPlanData) {
