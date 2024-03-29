@@ -47,7 +47,9 @@ public class Session {
 
     public int getId() {
         return id;
-    }public String getMovieTitle() {
+    }
+
+    public String getMovieTitle() {
         return movieTitle;
     }
 
@@ -67,6 +69,10 @@ public class Session {
         return language;
     }
 
+    /**
+     * Transform session data to a String that can be displayed in front-end.
+     * @return formatted string
+     * */
     @Override
     public String toString() {
         return String.format("%-17s", movieTitle)
