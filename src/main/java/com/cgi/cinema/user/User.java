@@ -55,7 +55,8 @@ public class User {
                 .filter(x -> !moviesWatched.contains(x))  // filter out lready watched movies
                 .sorted(Comparator
                         .comparing(x -> genresWatched.get((x.getGenre()))))
-                .toList();
+                .toList()
+                .reversed();
         if (result.size() <= 5) {
             return result;
         }

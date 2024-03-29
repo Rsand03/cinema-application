@@ -33,7 +33,22 @@ async function loadFilteredMoviesData() {
         method: 'GET'
     });
     if (response.status !== 200) {
-        displayErrorMessage("Something went wrong. \n" + response.status);
+        displayErrorMessage("Something went wrong." + response.status);
+    } else {
+        const data = await response.json();
+        // create form with radio buttons
+        renderMoviesForm(data);
+    }
+}
+
+
+async function loadRecommendedMovies() {
+    const url = BACKEND_URL + "/movies/recommended"
+    const response = await fetch(url,{
+        method: 'GET'
+    });
+    if (response.status !== 200) {
+        displayErrorMessage("Unable to recommend movies.");
     } else {
         const data = await response.json();
         // create form with radio buttons
@@ -44,7 +59,7 @@ async function loadFilteredMoviesData() {
 
 function renderMoviesForm(movieData) {
     const moviesSelectionField = document.getElementById('movie-selection-box');
-    let displayedMovies = `<p> Select a movie:</p>`;
+    let displayedMovies = "";
     for (const movie of movieData) {
         const displayedLabel = movie.asString;
         displayedMovies +=
@@ -53,7 +68,7 @@ function renderMoviesForm(movieData) {
                     <pre style="font-family: Roboto Mono, monospace; margin: 0">${displayedLabel}</pre>
                 </div>`
     }
-    if (displayedMovies === `<p> Select a movie:</p>`) {
+    if (displayedMovies === "") {
         displayErrorMessage("No matching movies");
     } else {
         displayErrorMessage("");  // stop showing previous error message
