@@ -52,9 +52,9 @@ public class User {
             return List.of();
         }
         List<Movie> result = movies.stream()
-                .filter(x -> !moviesWatched.contains(x))  // filter out lready watched movies
+                .filter(x -> !moviesWatched.contains(x))  // filter out already watched movies
                 .sorted(Comparator
-                        .comparing(x -> genresWatched.get((x.getGenre()))))
+                        .comparing(this::getTimesGenreWatched))
                 .toList()
                 .reversed();
         if (result.size() <= 5) {
