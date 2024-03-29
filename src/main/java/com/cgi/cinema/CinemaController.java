@@ -40,15 +40,25 @@ public class CinemaController {
                 .toList();
     }
 
+    @RequestMapping("/movies/recommended")
+    public ResponseEntity<List<Map<String, String>>> getFilteredMovies() {
+        List<Map<String, String>> result = user.getTopFiveRecommendedMovies(cinema.getMovies()).stream()
+                .map(Movie::toJson)
+                .toList();
+        if (result.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @RequestMapping("/movies/selection")
     public ResponseEntity<HttpStatus> verifyMovieSelection(@RequestParam Integer id) {
         Optional<Movie> newMovie = cinema.getMovieById(id);
         if (newMovie.isPresent()) {
             user.addToWatchingHistory(newMovie.get());
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @RequestMapping("/seats")

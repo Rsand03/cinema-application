@@ -1,5 +1,7 @@
 package com.cgi.cinema.cinema;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import static com.cgi.cinema.cinema.Seat.OccupationStatus.FREE;
@@ -26,10 +28,6 @@ public class Seat {
 
     public boolean isFree() {
         return occupationStatus.equals(FREE);
-    }
-
-    public void resetOccupationStatusToFree() {
-        occupationStatus = FREE;
     }
 
     public void setOccupationStatus(OccupationStatus status) {
@@ -63,5 +61,12 @@ public class Seat {
 
     public String getOccupationStatus() {
         return occupationStatus.toString();
+    }
+
+    public Map<String, String> toJson() {
+        HashMap<String, String> seatHashMap = new HashMap<>();
+        seatHashMap.put("seatNumber", String.valueOf(seatNumber));
+        seatHashMap.put("occupationStatus", getOccupationStatus());
+        return seatHashMap;
     }
 }

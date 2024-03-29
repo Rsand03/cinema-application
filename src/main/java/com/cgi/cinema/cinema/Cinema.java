@@ -23,13 +23,12 @@ public class Cinema {
     private static final int SEAT_COLUMNS_COUNT = 15;  // should be an odd number
     private static final int CENTRE_ROW_NUMBER = (SEAT_ROWS_COUNT / 2) + 1;  // indexing starts at 1
     private static final int CENTRE_COLUMN_NUMBER = (SEAT_COLUMNS_COUNT / 2) + 1;  // indexing starts at 1
-
     private static final int SEAT_COUNT = SEAT_COLUMNS_COUNT * SEAT_ROWS_COUNT;
 
-    private final List<String> genres = List.of("Comedy", "Action", "Horror", "Nature");
-    private final List<String> ageRatings = List.of("G", "PG", "PG-13", "NC-17");
-    private final List<Integer> sessionStartMinutes = List.of(0, 15, 30, 45);
-    private final List<String> languages = List.of("Estonian", "English", "Russian");
+    private final List<String> genres = Movie.genres;
+    private final List<String> ageRatings = Movie.ageRatings;
+    private final List<Integer> sessionStartMinutes = Movie.sessionStartMinutes;
+    private final List<String> languages = Movie.languages;
 
     private final List<Movie> movies = new ArrayList<>();
     private final List<Seat> seats = new ArrayList<>();
@@ -41,18 +40,14 @@ public class Cinema {
 
     private void generateSeats() {
         for (int i = 0; i < SEAT_COUNT; i++) {
-            // columnNumber indexing starts at 1
-            int columnNumber = (i % SEAT_COLUMNS_COUNT) + 1;
+            int columnNumber = (i % SEAT_COLUMNS_COUNT) + 1; // columnNumber indexing starts at 1
             int distanceFromCenterColumn = Math.abs(CENTRE_COLUMN_NUMBER - columnNumber);
 
-            // rowNumber indexing starts at 1
-            int rowNumber = (i / SEAT_COLUMNS_COUNT) + 1;
+            int rowNumber = (i / SEAT_COLUMNS_COUNT) + 1;  // rowNumber indexing starts at 1
             int distanceFromCenterRow = Math.abs(CENTRE_ROW_NUMBER - rowNumber);
 
             int distanceFromCenter = distanceFromCenterColumn + distanceFromCenterRow;
-
-            // seatNumber indexing starts at 1
-            seats.add(new Seat(rowNumber, i + 1, distanceFromCenter));
+            seats.add(new Seat(rowNumber, i + 1, distanceFromCenter));  // seatNumber indexing starts at 1
         }
     }
 
@@ -68,15 +63,17 @@ public class Cinema {
                     genres.get(random.nextInt(0, genres.size())),
                     ageRatings.get(random.nextInt(0, ageRatings.size())),
                     LocalTime.of(
-                            random.nextInt(8, 23),
-                            sessionStartMinutes.get(random.nextInt(0, sessionStartMinutes.size()))),
+                            random.nextInt(8, 23),  // hours
+                            sessionStartMinutes.get(random.nextInt(0, sessionStartMinutes.size()))),  // minutes
                     languages.get(random.nextInt(0, languages.size())))
             );
         }
     }
 
     public List<Movie> getMovies() {
-        return new ArrayList<>(movies);
+        return movies.stream()
+                .sorted(Comparator.comparing(Movie::getSessionStartTime))
+                .toList();
     }
 
     /**
@@ -90,16 +87,13 @@ public class Cinema {
 
     public Optional<List<Map<String, String>>> getRandomizedSeatingPlan(int ticketCount) {
         // generate random occupation status for each seat
-        seats.forEach(Seat::resetOccupationStatusToFree);
         seats.forEach(Seat::setRandomOccupationStatus);
 
-        HashMap<List<Seat>, Integer> availableSeatingOptions = new HashMap<>();
         // find all available (free) seat combinations
-        for (Seat seat : seats) {
+        HashMap<List<Seat>, Integer> availableSeatingOptions = new HashMap<>();
+
+        for (Seat seat : seats.subList(0, seats.size() + 1 - ticketCount)) {
             int seatIndex = seat.getSeatNumber() - 1;
-            if (seatIndex + ticketCount > seats.size()) {
-                break;
-            }
             // create list of neighbouring seats
             // size matches the amount of tickets bought
             List<Seat> neighbouringSeats = seats.subList(seatIndex, seatIndex + ticketCount);
@@ -117,22 +111,19 @@ public class Cinema {
                 availableSeatingOptions.put(neighbouringSeats, totalDistanceFromCenter);
             }
         }
-        // find best available seating option from hashmap, lower distance from center is better
+
+        // find the best available seating option from hashmap
         Optional<List<Seat>> bestAvailableSeats = availableSeatingOptions.keySet().stream()
-                .sorted(Comparator
-                        .comparing(availableSeatingOptions::get))
+                .sorted(Comparator.comparing(availableSeatingOptions::get))  // compare by distanceFromCenter
                 .findFirst();
-        // marks seats as selected
+
         if (bestAvailableSeats.isPresent()) {
+            // marks seats as selected
             bestAvailableSeats.get().forEach(x -> x.setOccupationStatus(SELECTED));
-            List<Map<String, String>> result = new ArrayList<>();
-            for (Seat seat : seats) {
-                HashMap<String, String> seatHashMap = new HashMap<>();
-                seatHashMap.put("seatNumber", String.valueOf(seat.getSeatNumber()));
-                seatHashMap.put("occupationStatus", seat.getOccupationStatus());
-                result.add(seatHashMap);
-            }
-            return Optional.of(result);
+            return Optional.of(seats.stream()
+                            .map(Seat::toJson)
+                            .toList()
+            );
         }
         return Optional.empty();
     }
@@ -153,8 +144,8 @@ public class Cinema {
         if (!"-".equals(startingHour)) {  // starting time (hour)
             int hour = Integer.parseInt(startingHour);
             result = result.stream()
-                    .filter(x -> x.getSessionStartTime()
-                            .getHour() > hour).toList();
+                    .filter(x -> x.getSessionStartTime().getHour() > hour)
+                    .toList();
         }
         if (!"-".equals(language)) {  // language
             result = result.stream()

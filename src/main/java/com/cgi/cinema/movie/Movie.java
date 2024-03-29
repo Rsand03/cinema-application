@@ -7,6 +7,12 @@ import java.util.Map;
 
 public class Movie {
 
+    // back-end can handle modifying these lists, but front-end has static dropdown menus
+    public static final List<String> genres = List.of("Comedy", "Action", "Horror", "Nature");
+    public static final List<String> ageRatings = List.of("G", "PG", "PG-13", "NC-17");
+    public static final List<Integer> sessionStartMinutes = List.of(0, 15, 30, 45);
+    public static final List<String> languages = List.of("Estonian", "English", "Russian");
+
     private final String title;
     private final String genre;
     private final String ageRating;

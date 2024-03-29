@@ -53,13 +53,12 @@ function renderMoviesForm(movieData) {
                     <pre style="font-family: Roboto Mono, monospace; margin: 0">${displayedLabel}</pre>
                 </div>`
     }
-    if (displayedMovies === "") {
+    if (displayedMovies === `<p> Select a movie:</p>`) {
         displayErrorMessage("No matching movies");
     } else {
         displayErrorMessage("");  // stop showing previous error message
         moviesSelectionField.innerHTML = displayedMovies;
     }
-    moviesSelectionField.innerHTML = displayedMovies;
 }
 
 
