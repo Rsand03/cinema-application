@@ -13,7 +13,7 @@ git clone [https://github.com/Rsand03/cinema-application.git]
 3) Run CinemaApplication.java
 4) Navigate to http://localhost:8080/ in your browser
 
-## Usage
+## Kasutamine
 Kirjutan selle osa eesti keeles, kuna ka proovitöö juhend oli eesti keeles.
 
 Avalehel kuvatakse kasutajale esialgu kõik kinoseansid. Igal seansil on filmi pealkiri, žanr, vanusepiirang, algusaeg ning keel.
@@ -31,10 +31,11 @@ Peale "BUY" nupu vajutamist suunatakse kasutaja saali istekohtade plaani juurde.
 
 ## Projekti kokkuvõte
 * Realiseerisin kõik nõutud funktsionaalsused, välja arvatud terve nädala kinokava kuvamise. Selle lahendamiseks oleks vaja kasutada LocalDate objekti koos kuupäevaga, või siis front-end'is filmid suvaliselt erinevate nädalapäevade vahel ära jagada.
+* Tegelesin projektiga 3 õhtut ning töötunde kulus ~20.
 * Peaaegu kogu kood on minu enda kirjutatud. Kopeerisin ainult mõned HTML ja CSS *template*id, ning needki pärinevad mu varasematest projektides.
-* Abi saamiseks kasutasin Spring booti Youtube tutoriale, googeldamist, Stackoverflowi ning CSSi jaoks ka chatGPTd.
+* Abi saamiseks kasutasin Spring booti Youtube tutoriale, googeldamist, Stackoverflowi ning CSSi jaoks ka ChatGPTd.
 * Kõige keerulisem osa projekti juures oli CSSi abil kinosaali plaani kuvamine, millele aitas lõpuks lahenduse leida Stackoverflow. Istekohtade front-end oli isegi keerulisem kui back-endi soovitamise algoritm.
-* Kood toetab valdavalt uute filmide, seansiaegade, žanrite jne lisamist, kuid ainus "staatiline" takistus on front-endi filtreerimise valikute dropdown menüüd. Neid ei jõudnud kahjuks api requestide abil dünaamiliseks muuta. Dünaamiliste menüüdega oleks võinud juba mõne filmide andmebaasi integreerimise peale mõelda.
+* Kood toetab valdavalt uute filmide, seansiaegade, žanrite jne lisamist, kuid ainus "staatiline takistus" on front-endi filtreerimise valikute dropdown menüüd. Neid ei jõudnud kahjuks sobilike api requestide ja javascripti abil dünaamiliseks muuta. Dünaamiliste menüüdega oleks võinud juba mõne filmide andmebaasi integreerimise peale mõelda.
 * Filmid ja seansid on omavahel eraldatud. Filmidel on pealkiri, žanr ja vanusepiirang, seansil on film (koos selle parameetritega), algusaeg ning keel. Üldise loogika osas on ainus "viga" see, et filmidele määratakse žanr ja vanusepiirang juhuslikult. Võib esineda huvitavaid kombinatsioone.
 * Teste ei jõudnud kahjuks lisada, kuigi need on iga projekti lahutamatu osa.
 * Kasulikud konstandid, mille muutmist võib katsetada: SESSION_COUNT, SEAT_BEING_OCCUPIED_PROBABILITY.
