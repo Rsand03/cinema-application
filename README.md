@@ -36,7 +36,7 @@ Peale "BUY" nupu vajutamist suunatakse kasutaja saali istekohtade plaani juurde.
 * Kõige keerulisem osa projekti juures oli CSSi abil kinosaali plaani kuvamine, millele aitas lõpuks lahenduse leida Stackoverflow. Istekohtade front-end oli isegi keerulisem kui back-endi soovitamise algoritm.
 * Kood toetab valdavalt uute filmide, seansiaegade, žanrite jne lisamist, kuid ainus "staatiline" takistus on front-endi filtreerimise valikute dropdown menüüd. Neid ei jõudnud kahjuks api requestide abil dünaamiliseks muuta. Dünaamiliste menüüdega oleks võinud juba mõne filmide andmebaasi integreerimise peale mõelda.
 * Filmid ja seansid on omavahel eraldatud. Filmidel on pealkiri, žanr ja vanusepiirang, seansil on film (koos selle parameetritega), algusaeg ning keel. Üldise loogika osas on ainus "viga" see, et filmidele määratakse žanr ja vanusepiirang juhuslikult. Võib esineda huvitavaid kombinatsioone.
-* Teste ei jõudnud kahjuks lisada, kuigi need on iga projekti lahutamatu osa.
+* Kahjuks jõudsin testid lisada ainult Seat klassile, kuigi põhjalikud testid on iga projekti lahutamatu osa.
 * Kasulikud konstandid, mille muutmist võib katsetada: SESSION_COUNT, SEAT_BEING_OCCUPIED_PROBABILITY.
 
 ## Contributing
