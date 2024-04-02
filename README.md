@@ -30,6 +30,7 @@ Pileti ostmiseks tuleb märkida soovitud filmiseanss (seansil klikkides) ning va
 Peale "BUY" nupu vajutamist suunatakse kasutaja saali istekohtade plaani juurde. Määratud kohad on märgitud rohelisega. Kui pileteid on mitu, siis soovitatakse esmajärjekorras istekohti, mis asuvad kõik üksteise kõrval ning ühes reas. Lisaks sellele võimalikult saali keskel. Kui valitud on näiteks 5 piletit ning viit üksteise kõrval asetsevat vaba istet ei leidu, siis valitakse ükskõik millised võimalikult saali keskel asetsevad istmed. Viimasel juhul kuvatakse ka vastav teade. "Back" nupp viib tagasi filmide valimise lehele (eelnevalt valitud film on lisatud kasutaja vaatamiste ajalukku).
 
 ## Projekti kokkuvõte
+
 * Realiseerisin kõik nõutud funktsionaalsused, välja arvatud terve nädala kinokava kuvamise. Selle lahendamiseks oleks vaja kasutada LocalDate objekti koos kuupäevaga, või siis front-end'is filmid juhuslikult ja näiliselt erinevate nädalapäevade vahel ära jagada.
 * Tegelesin projektiga 3 õhtut ning töötunde kulus ~20.
 * Peaaegu kogu kood on minu enda kirjutatud. Kopeerisin ainult mõned HTML ja CSS *templateid*, ning needki pärinevad mu varasematest projektidest.
@@ -37,7 +38,7 @@ Peale "BUY" nupu vajutamist suunatakse kasutaja saali istekohtade plaani juurde.
 * Kõige keerulisem osa projekti juures oli CSSi abil kinosaali plaani kuvamine, millele aitas lõpuks lahenduse leida Stack Overflow. Istekohtade front-end oli isegi keerulisem kui back-endi istekohtade soovitamise algoritm.
 * Kood toetab valdavalt uute filmide, seansiaegade, žanrite jne lisamist, kuid ainus "staatiline takistus" on front-endi filtreerimise valikute dropdown menüüd. Neid ei jõudnud kahjuks sobilike api requestide ja javascripti abil dünaamiliseks muuta. Dünaamiliste menüüdega oleks võinud juba mõne filmide andmebaasi integreerimise peale mõelda.
 * Filmid ja seansid on omavahel eraldatud. Filmidel on pealkiri, žanr ja vanusepiirang, seansil on film (koos kõigi selle parameetritega), algusaeg ning keel. Üldise loogika osas on ainus viga see, et filmidele määratakse žanr ja vanusepiirang juhuslikult. Võib esineda huvitavaid kombinatsioone.
-* Teste ei jõudnud kahjuks lisada, kuigi need on iga projekti lahutamatu osa.
+* Kahjuks jõudsin testid lisada ainult Seat klassile, kuigi põhjalikud testid on iga projekti lahutamatu osa.
 * Kasulikud konstandid, mille muutmist võib katsetada: Cinema klassi SESSION_COUNT, Seat klassi SEAT_BEING_OCCUPIED_PROBABILITY.
 
 ## Contributing
