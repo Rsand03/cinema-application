@@ -17,6 +17,7 @@ async function loadMovieData() {
     } else {
         const data = await response.json();
         // create form with radio buttons
+        // {"id": movie session id, "asString": all necessary movie data as a pre-formatted string}
         renderMoviesForm(data);
     }
 }
@@ -75,6 +76,7 @@ async function loadRecommendedMovies() {
  * Renders the movie selection form.
  * If there are no movies to render, displays error message.
  * @param {list} movieData movie options to be rendered
+ * movieData: {"id": movie session id, "asString": all necessary movie data as a pre-formatted string}
  */
 function renderMoviesForm(movieData) {
     const moviesSelectionField = document.getElementById('movie-selection-container');
@@ -192,6 +194,7 @@ async function loadSeatingPlan() {
     });
 
     const data = await response.json();
+    // {"seatNumber": seat number, "occupationStatus": state of the seat (FREE / SELECTED / OCCUPIED)}
     if (response.status !== 200 && response.status !== 206) {
         displaySeatErrorMessage("No available seats.");
     } else if (response.status === 206) {
@@ -205,6 +208,7 @@ async function loadSeatingPlan() {
 /**
  * Renders the seating plan based on seating plan data.
  * @param {list} seatingPlanData seating plan data in json format
+ * seatingPlanData: {"seatNumber": seat number, "occupationStatus": state of the seat (FREE / SELECTED / OCCUPIED)}
  */
 function renderSeatingPlan(seatingPlanData) {
     for (const seat of seatingPlanData) {
