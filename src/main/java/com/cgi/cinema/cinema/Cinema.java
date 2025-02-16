@@ -11,19 +11,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+import static com.cgi.cinema.Constants.CENTRE_SEAT_COLUMN_NUMBER;
+import static com.cgi.cinema.Constants.CENTRE_SEAT_ROW_NUMBER;
+import static com.cgi.cinema.Constants.SEAT_COLUMNS_COUNT;
+import static com.cgi.cinema.Constants.TOTAL_SEATS_COUNT;
+import static com.cgi.cinema.Constants.TOTAL_ACTIVE_MOVIE_SESSIONS_COUNT;
+import static com.cgi.cinema.Constants.AVAILABLE_MOVIE_TITLES;
 import static com.cgi.cinema.cinema.Seat.OccupationStatus.SELECTED;
 
 
 public class Cinema {
 
-    private static final int SESSION_COUNT = 35;
 
-    // changing the number of seats would currently break front-end
-    private static final int SEAT_ROWS_COUNT = 9;  // should be an odd number
-    private static final int SEAT_COLUMNS_COUNT = 15;  // should be an odd number
-    private static final int CENTRE_ROW_NUMBER = (SEAT_ROWS_COUNT / 2) + 1;  // indexing starts at 1
-    private static final int CENTRE_COLUMN_NUMBER = (SEAT_COLUMNS_COUNT / 2) + 1;  // indexing starts at 1
-    private static final int SEAT_COUNT = SEAT_COLUMNS_COUNT * SEAT_ROWS_COUNT;
 
     private final List<Movie> movies = new ArrayList<>();
     private final List<Session> sessions = new ArrayList<>();
@@ -34,7 +33,7 @@ public class Cinema {
      * */
     public Cinema() {
         generateMovies();
-        generateSessions(SESSION_COUNT);
+        generateSessions(TOTAL_ACTIVE_MOVIE_SESSIONS_COUNT);
         generateSeats();
     }
 
@@ -42,7 +41,7 @@ public class Cinema {
      * Generate and save new movies with randomized parameters.
      * */
     public void generateMovies() {
-        for (String movieTitle : Movie.movieTitles) {
+        for (String movieTitle : AVAILABLE_MOVIE_TITLES) {
             movies.add(new Movie(movieTitle));
         }
     }
@@ -64,12 +63,12 @@ public class Cinema {
      * All seats have a seatNumber and a rowNumber.
      * */
     private void generateSeats() {
-        for (int i = 0; i < SEAT_COUNT; i++) {
+        for (int i = 0; i < TOTAL_SEATS_COUNT; i++) {
             int columnNumber = (i % SEAT_COLUMNS_COUNT) + 1; // columnNumber indexing starts at 1
-            int distanceFromCenterColumn = Math.abs(CENTRE_COLUMN_NUMBER - columnNumber);
+            int distanceFromCenterColumn = Math.abs(CENTRE_SEAT_COLUMN_NUMBER - columnNumber);
 
             int rowNumber = (i / SEAT_COLUMNS_COUNT) + 1;  // rowNumber indexing starts at 1
-            int distanceFromCenterRow = Math.abs(CENTRE_ROW_NUMBER - rowNumber);
+            int distanceFromCenterRow = Math.abs(CENTRE_SEAT_ROW_NUMBER - rowNumber);
 
             int distanceFromCenter = distanceFromCenterColumn + distanceFromCenterRow;
             seats.add(new Seat(rowNumber, i + 1, distanceFromCenter));  // seatNumber indexing starts at 1

@@ -1,4 +1,4 @@
-package com.cgi.cinema;
+package com.cgi.cinema.controller;
 
 import com.cgi.cinema.cinema.Cinema;
 import com.cgi.cinema.session.Session;

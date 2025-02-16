@@ -2,15 +2,13 @@ package com.cgi.cinema.session;
 
 import java.time.LocalTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class Session {
+import static com.cgi.cinema.Constants.MOVIE_SESSION_LANGUAGES;
+import static com.cgi.cinema.Constants.SESSION_STARTING_TIME_MINUTES;
 
-    // back-end can handle modifying these lists, but front-end has static dropdown menus
-    public static final List<Integer> sessionStartMinutes = List.of(0, 15, 30, 45);
-    public static final List<String> languages = List.of("Estonian", "English", "Russian");
+public class Session {
 
     private final String movieTitle;
     private final String genre;
@@ -33,8 +31,8 @@ public class Session {
 
         this.sessionStartTime = LocalTime.of(
                 random.nextInt(8, 23),  // hours
-                sessionStartMinutes.get(random.nextInt(0, sessionStartMinutes.size())));  // minutes
-        this.language = languages.get(random.nextInt(0, languages.size()));
+                SESSION_STARTING_TIME_MINUTES.get(random.nextInt(0, SESSION_STARTING_TIME_MINUTES.size())));  // minutes
+        this.language = MOVIE_SESSION_LANGUAGES.get(random.nextInt(0, MOVIE_SESSION_LANGUAGES.size()));
         this.id = this.getNextId();
     }
 

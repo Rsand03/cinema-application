@@ -4,12 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import static com.cgi.cinema.Constants.SEAT_BEING_OCCUPIED_PROBABILITY;
 import static com.cgi.cinema.cinema.Seat.OccupationStatus.FREE;
 import static com.cgi.cinema.cinema.Seat.OccupationStatus.OCCUPIED;
 
 public class Seat {
-
-    private static final double SEAT_BEING_OCCUPIED_PROBABILITY = 0.5;
 
     private final int rowNumber;
     private final int seatNumber;

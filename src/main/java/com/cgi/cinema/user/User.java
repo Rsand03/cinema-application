@@ -1,12 +1,13 @@
 package com.cgi.cinema.user;
 
-import com.cgi.cinema.session.Movie;
 import com.cgi.cinema.session.Session;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.cgi.cinema.Constants.MOVIE_GENRES;
 
 public class User {
 
@@ -19,7 +20,7 @@ public class User {
      * which is later used for movie session recommendation algorithm.
      * */
     public User() {
-        for (String genre : Movie.genres) {
+        for (String genre : MOVIE_GENRES) {
             genresWatched.put(genre, 0);
         }
     }
