@@ -1,24 +1,25 @@
-package com.cgi.cinema.cinema;
+package com.cgi.app.cinema;
 
+import com.cgi.app.entity.cinema.SeatEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
 import java.util.HashMap;
 
-import static com.cgi.cinema.cinema.Seat.OccupationStatus.FREE;
-import static com.cgi.cinema.cinema.Seat.OccupationStatus.SELECTED;
+import static com.cgi.app.entity.cinema.SeatEntity.OccupationStatus.FREE;
+import static com.cgi.app.entity.cinema.SeatEntity.OccupationStatus.SELECTED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SeatTest {
 
-    private Seat seat;
+    private SeatEntity seat;
 
     @BeforeEach
     void beforeEach() {
-        seat = new Seat(1, 2, 5);
+        seat = new SeatEntity(1, 2, 5);
     }
 
     @Test

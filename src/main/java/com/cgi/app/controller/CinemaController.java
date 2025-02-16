@@ -1,8 +1,8 @@
-package com.cgi.cinema.controller;
+package com.cgi.app.controller;
 
-import com.cgi.cinema.cinema.Cinema;
-import com.cgi.cinema.session.Session;
-import com.cgi.cinema.user.User;
+import com.cgi.app.entity.cinema.CinemaEntity;
+import com.cgi.app.entity.movie.MovieSessionEntity;
+import com.cgi.app.entity.user.UserEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +17,8 @@ import java.util.Optional;
 @RestController
 public class CinemaController {
 
-    private final Cinema cinema = new Cinema();
-    private final User user = new User();
+    private final CinemaEntity cinema = new CinemaEntity();
+    private final UserEntity user = new UserEntity();
 
     /**
      * Get data about all available movie sessions.
@@ -30,7 +30,7 @@ public class CinemaController {
     @RequestMapping("/movies")
     public List<Map<String, String>> getMovies() {
         return cinema.getSessions().stream()
-                .map(Session::toJson)
+                .map(MovieSessionEntity::toJson)
                 .toList();
     }
 
@@ -52,7 +52,7 @@ public class CinemaController {
                                                        @RequestParam String language) {
         return cinema.getFilteredSessions(genre, ageRating, sessionStartTime, language)
                 .stream()
-                .map(Session::toJson)
+                .map(MovieSessionEntity::toJson)
                 .toList();
     }
 
@@ -66,7 +66,7 @@ public class CinemaController {
     @RequestMapping("/movies/recommended")
     public ResponseEntity<List<Map<String, String>>> getFilteredMovies() {
         List<Map<String, String>> result = user.getTopFiveRecommendedMovies(cinema.getSessions()).stream()
-                .map(Session::toJson)
+                .map(MovieSessionEntity::toJson)
                 .toList();
         if (result.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -81,7 +81,7 @@ public class CinemaController {
      */
     @RequestMapping("/movies/selection")
     public ResponseEntity<HttpStatus> verifyMovieSessionSelection(@RequestParam Integer id) {
-        Optional<Session> selectedMovieSession = cinema.getSessionById(id);
+        Optional<MovieSessionEntity> selectedMovieSession = cinema.getSessionById(id);
         if (selectedMovieSession.isPresent()) {
             user.addToWatchingHistory(selectedMovieSession.get());
             return new ResponseEntity<>(HttpStatus.OK);

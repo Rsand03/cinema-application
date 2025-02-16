@@ -1,7 +1,7 @@
-package com.cgi.cinema.cinema;
+package com.cgi.app.entity.cinema;
 
-import com.cgi.cinema.session.Movie;
-import com.cgi.cinema.session.Session;
+import com.cgi.app.entity.movie.MovieEntity;
+import com.cgi.app.entity.movie.MovieSessionEntity;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -11,29 +11,27 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
-import static com.cgi.cinema.Constants.CENTRE_SEAT_COLUMN_NUMBER;
-import static com.cgi.cinema.Constants.CENTRE_SEAT_ROW_NUMBER;
-import static com.cgi.cinema.Constants.SEAT_COLUMNS_COUNT;
-import static com.cgi.cinema.Constants.TOTAL_SEATS_COUNT;
-import static com.cgi.cinema.Constants.TOTAL_ACTIVE_MOVIE_SESSIONS_COUNT;
-import static com.cgi.cinema.Constants.AVAILABLE_MOVIE_TITLES;
-import static com.cgi.cinema.cinema.Seat.OccupationStatus.SELECTED;
+import static com.cgi.app.util.Constants.CENTRE_SEAT_COLUMN_NUMBER;
+import static com.cgi.app.util.Constants.CENTRE_SEAT_ROW_NUMBER;
+import static com.cgi.app.util.Constants.SEAT_COLUMNS_COUNT;
+import static com.cgi.app.util.Constants.TOTAL_SEATS_COUNT;
+import static com.cgi.app.util.Constants.TOTAL_AVAILABLE_MOVIE_SESSIONS_COUNT;
+import static com.cgi.app.util.Constants.AVAILABLE_MOVIE_TITLES;
+import static com.cgi.app.entity.cinema.SeatEntity.OccupationStatus.SELECTED;
 
 
-public class Cinema {
+public class CinemaEntity {
 
-
-
-    private final List<Movie> movies = new ArrayList<>();
-    private final List<Session> sessions = new ArrayList<>();
-    private final List<Seat> seats = new ArrayList<>();
+    private final List<MovieEntity> movies = new ArrayList<>();
+    private final List<MovieSessionEntity> sessions = new ArrayList<>();
+    private final List<SeatEntity> seats = new ArrayList<>();
 
     /**
      * Initialize Cinema class by generating movies and a seating plan.
      * */
-    public Cinema() {
+    public CinemaEntity() {
         generateMovies();
-        generateSessions(TOTAL_ACTIVE_MOVIE_SESSIONS_COUNT);
+        generateSessions(TOTAL_AVAILABLE_MOVIE_SESSIONS_COUNT);
         generateSeats();
     }
 
@@ -42,7 +40,7 @@ public class Cinema {
      * */
     public void generateMovies() {
         for (String movieTitle : AVAILABLE_MOVIE_TITLES) {
-            movies.add(new Movie(movieTitle));
+            movies.add(new MovieEntity(movieTitle));
         }
     }
 
@@ -53,8 +51,8 @@ public class Cinema {
     public void generateSessions(int amountOfSessions) {
         Random random = new Random();
         for (int i = 0; i < amountOfSessions; i++) {
-            Movie movieOfTheSession = movies.get(random.nextInt(0, movies.size()));
-            sessions.add(new Session(movieOfTheSession));
+            MovieEntity movieOfTheSession = movies.get(random.nextInt(0, movies.size()));
+            sessions.add(new MovieSessionEntity(movieOfTheSession));
         }
     }
 
@@ -71,7 +69,7 @@ public class Cinema {
             int distanceFromCenterRow = Math.abs(CENTRE_SEAT_ROW_NUMBER - rowNumber);
 
             int distanceFromCenter = distanceFromCenterColumn + distanceFromCenterRow;
-            seats.add(new Seat(rowNumber, i + 1, distanceFromCenter));  // seatNumber indexing starts at 1
+            seats.add(new SeatEntity(rowNumber, i + 1, distanceFromCenter));  // seatNumber indexing starts at 1
         }
     }
 
@@ -84,41 +82,40 @@ public class Cinema {
      * */
     public Optional<List<Map<String, String>>> getNeighbouringSeats(int ticketCount) {
         // generate random occupation status for each seat
-        seats.forEach(Seat::setRandomOccupationStatus);
+        seats.forEach(SeatEntity::setRandomOccupationStatus);
 
         // find all available (free) seat combinations
-        HashMap<List<Seat>, Integer> availableSeatingOptions = new HashMap<>();
+        HashMap<List<SeatEntity>, Integer> availableSeatingOptions = new HashMap<>();
 
-        for (Seat seat : seats.subList(0, seats.size() + 1 - ticketCount)) {
+        for (SeatEntity seat : seats.subList(0, seats.size() + 1 - ticketCount)) {
             int seatIndex = seat.getSeatNumber() - 1;
             // create list of neighbouring seats
             // size matches the amount of tickets bought
-            List<Seat> neighbouringSeats = seats.subList(seatIndex, seatIndex + ticketCount);
+            List<SeatEntity> neighbouringSeats = seats.subList(seatIndex, seatIndex + ticketCount);
             boolean allSeatsAreFree = neighbouringSeats.stream()
-                    .allMatch(Seat::isFree);
+                    .allMatch(SeatEntity::isFree);
             boolean allSeatsAreInSameRow = neighbouringSeats.stream()
-                    .mapToInt(Seat::getRowNumber)
+                    .mapToInt(SeatEntity::getRowNumber)
                     .distinct()
                     .toArray().length == 1;
             // check whether all neighbouring seats are free and in the same row
             if (allSeatsAreFree && allSeatsAreInSameRow) {
                 int totalDistanceFromCenter = neighbouringSeats.stream()
-                        .mapToInt(Seat::getDistanceFromCenter)
+                        .mapToInt(SeatEntity::getDistanceFromCenter)
                         .sum();
                 availableSeatingOptions.put(neighbouringSeats, totalDistanceFromCenter);
             }
         }
 
         // find the best available seating option from hashmap
-        Optional<List<Seat>> bestAvailableSeats = availableSeatingOptions.keySet().stream()
-                .sorted(Comparator.comparing(availableSeatingOptions::get))  // compare by distanceFromCenter
-                .findFirst();
+        Optional<List<SeatEntity>> bestAvailableSeats = availableSeatingOptions.keySet().stream()
+                .min(Comparator.comparing(availableSeatingOptions::get));  // compare by distanceFromCenter
 
         if (bestAvailableSeats.isPresent()) {
             // marks seats as selected
             bestAvailableSeats.get().forEach(x -> x.setOccupationStatus(SELECTED));
             return Optional.of(seats.stream()
-                            .map(Seat::toJson)
+                            .map(SeatEntity::toJson)
                             .toList()
             );
         }
@@ -132,14 +129,14 @@ public class Cinema {
      * @return list containing json data about all seats
      * */
     public Optional<List<Map<String, String>>> getAnySeats(int ticketCount) {
-        List<Seat> result = seats.stream()
-                .filter(Seat::isFree)
-                .sorted(Comparator.comparing(Seat::getDistanceFromCenter))
+        List<SeatEntity> result = seats.stream()
+                .filter(SeatEntity::isFree)
+                .sorted(Comparator.comparing(SeatEntity::getDistanceFromCenter))
                 .toList();
         if (result.size() >= ticketCount) {
             result.subList(0, ticketCount).forEach(x -> x.setOccupationStatus(SELECTED));  // select best seats
             return Optional.of(seats.stream()
-                    .map(Seat::toJson)
+                    .map(SeatEntity::toJson)
                     .toList());
         }
         return Optional.empty();
@@ -154,8 +151,8 @@ public class Cinema {
      * @param language required language
      * @return List containing filtered movies.
      * */
-    public List<Session> getFilteredSessions(String genre, String ageRating, String startingHour, String language) {
-        List<Session> result = new ArrayList<>(sessions);
+    public List<MovieSessionEntity> getFilteredSessions(String genre, String ageRating, String startingHour, String language) {
+        List<MovieSessionEntity> result = new ArrayList<>(sessions);
         // value "-" means that the specific category must not be filtered
         if (!"-".equals(genre)) {  // genre
             result = result.stream()
@@ -179,7 +176,7 @@ public class Cinema {
                     .toList();
         }
         return result.stream()
-                .sorted(Comparator.comparing(Session::getSessionStartTime))
+                .sorted(Comparator.comparing(MovieSessionEntity::getSessionStartTime))
                 .toList();
     }
 
@@ -188,16 +185,16 @@ public class Cinema {
      * @param id id of the movie
      * @return Optional object possibly containing a movie
      * */
-    public Optional<Session> getSessionById(int id) {
+    public Optional<MovieSessionEntity> getSessionById(int id) {
         return sessions.stream().filter(x -> x.getId() == id).findFirst();
     }
 
     /**
      * Get sessions sorted by session starting time.
      * */
-    public List<Session> getSessions() {
+    public List<MovieSessionEntity> getSessions() {
         return sessions.stream()
-                .sorted(Comparator.comparing(Session::getSessionStartTime))
+                .sorted(Comparator.comparing(MovieSessionEntity::getSessionStartTime))
                 .toList();
     }
 }

@@ -1,12 +1,12 @@
-package com.cgi.cinema.session;
+package com.cgi.app.entity.movie;
 
 import java.util.Random;
 
-import static com.cgi.cinema.Constants.MOVIE_AGE_RATINGS;
-import static com.cgi.cinema.Constants.MOVIE_GENRES;
+import static com.cgi.app.util.Constants.MOVIE_AGE_RATINGS;
+import static com.cgi.app.util.Constants.MOVIE_GENRES;
 
 
-public class Movie {
+public class MovieEntity {
 
     private final String title;
     private final String genre;
@@ -17,7 +17,7 @@ public class Movie {
      * The Movie class is used just as an input for Session class, which
      * links each movie title to specific age rating and genre.
      * */
-    public Movie(String title) {
+    public MovieEntity(String title) {
         Random random = new Random();
         this.title = title;
         this.genre = MOVIE_GENRES.get(random.nextInt(0, MOVIE_GENRES.size()));

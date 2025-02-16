@@ -1,14 +1,14 @@
-package com.cgi.cinema.session;
+package com.cgi.app.entity.movie;
 
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import static com.cgi.cinema.Constants.MOVIE_SESSION_LANGUAGES;
-import static com.cgi.cinema.Constants.SESSION_STARTING_TIME_MINUTES;
+import static com.cgi.app.util.Constants.MOVIE_SESSION_LANGUAGES;
+import static com.cgi.app.util.Constants.SESSION_STARTING_TIME_MINUTES;
 
-public class Session {
+public class MovieSessionEntity {
 
     private final String movieTitle;
     private final String genre;
@@ -23,7 +23,7 @@ public class Session {
      * TODO: Add a date to each session.
      * @param movie movie of the session
      * */
-    public Session(Movie movie) {
+    public MovieSessionEntity(MovieEntity movie) {
         Random random = new Random();
         this.movieTitle = movie.getTitle();
         this.genre = movie.getGenre();

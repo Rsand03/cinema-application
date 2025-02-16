@@ -1,10 +1,11 @@
-package com.cgi.cinema;
+package com.cgi.app.util;
 
 import java.util.List;
 
 public class Constants {
 
-    // --- constants related to the seats in the cinema ---
+    // --- constants related to the seats and seating plan in the cinema ---
+    public static final double SEAT_BEING_OCCUPIED_IN_SEATING_PLAN_PROBABILITY = 0.5;
     // changing the number of seats would currently break front-end
     public static final int SEAT_ROWS_COUNT = 9;  // should be an odd number
     public static final int SEAT_COLUMNS_COUNT = 15;  // should be an odd number
@@ -12,11 +13,9 @@ public class Constants {
     public static final int CENTRE_SEAT_COLUMN_NUMBER = (SEAT_COLUMNS_COUNT / 2) + 1;  // indexing starts at 1
     public static final int TOTAL_SEATS_COUNT = SEAT_COLUMNS_COUNT * SEAT_ROWS_COUNT;
 
-    public static final double SEAT_BEING_OCCUPIED_PROBABILITY = 0.5;
-
 
     // --- constants related to the cinema ---
-    public static final int TOTAL_ACTIVE_MOVIE_SESSIONS_COUNT = 35;
+    public static final int TOTAL_AVAILABLE_MOVIE_SESSIONS_COUNT = 35;
 
 
     // --- constants related to movies ---

@@ -1,14 +1,14 @@
-package com.cgi.cinema.cinema;
+package com.cgi.app.entity.cinema;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import static com.cgi.cinema.Constants.SEAT_BEING_OCCUPIED_PROBABILITY;
-import static com.cgi.cinema.cinema.Seat.OccupationStatus.FREE;
-import static com.cgi.cinema.cinema.Seat.OccupationStatus.OCCUPIED;
+import static com.cgi.app.util.Constants.SEAT_BEING_OCCUPIED_IN_SEATING_PLAN_PROBABILITY;
+import static com.cgi.app.entity.cinema.SeatEntity.OccupationStatus.FREE;
+import static com.cgi.app.entity.cinema.SeatEntity.OccupationStatus.OCCUPIED;
 
-public class Seat {
+public class SeatEntity {
 
     private final int rowNumber;
     private final int seatNumber;
@@ -25,7 +25,7 @@ public class Seat {
      * @param seatNumber seat number
      * @param distanceFromCenter seat's distance from the centre point of the cinema hall
      * */
-    protected Seat(int rowNumber, int seatNumber, int distanceFromCenter) {
+    protected SeatEntity(int rowNumber, int seatNumber, int distanceFromCenter) {
         this.rowNumber = rowNumber;
         this.seatNumber = seatNumber;
         this.distanceFromCenter = distanceFromCenter;
@@ -60,9 +60,9 @@ public class Seat {
     private OccupationStatus getRandomOccupationStatus() {
         Random randomObject = new Random();
         int randomInt = randomObject.nextInt(0, 100);
-        if (randomInt > 100 * SEAT_BEING_OCCUPIED_PROBABILITY) {
+        if (randomInt > 100 * SEAT_BEING_OCCUPIED_IN_SEATING_PLAN_PROBABILITY) {
             return FREE;
-        };
+        }
         return OCCUPIED;
     }
 
