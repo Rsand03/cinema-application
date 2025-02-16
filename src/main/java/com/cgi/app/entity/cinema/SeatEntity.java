@@ -14,6 +14,8 @@ public class SeatEntity {
     private final int seatNumber;
     private final int distanceFromCenter;
     private OccupationStatus occupationStatus = OccupationStatus.FREE;
+    private final Random random = new Random();
+
 
     public enum OccupationStatus {
         OCCUPIED, FREE, SELECTED
@@ -25,7 +27,7 @@ public class SeatEntity {
      * @param seatNumber seat number
      * @param distanceFromCenter seat's distance from the centre point of the cinema hall
      * */
-    protected SeatEntity(int rowNumber, int seatNumber, int distanceFromCenter) {
+    public SeatEntity(int rowNumber, int seatNumber, int distanceFromCenter) {
         this.rowNumber = rowNumber;
         this.seatNumber = seatNumber;
         this.distanceFromCenter = distanceFromCenter;
@@ -58,8 +60,7 @@ public class SeatEntity {
      * @return randomized occupation status
      * */
     private OccupationStatus getRandomOccupationStatus() {
-        Random randomObject = new Random();
-        int randomInt = randomObject.nextInt(0, 100);
+        int randomInt = random.nextInt(0, 100);
         if (randomInt > 100 * SEAT_BEING_OCCUPIED_IN_SEATING_PLAN_PROBABILITY) {
             return FREE;
         }

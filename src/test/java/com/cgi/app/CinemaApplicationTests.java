@@ -8,6 +8,7 @@ class CinemaApplicationTests {
 
     @Test
     void contextLoads() {
+        // placeholder
     }
 
 }

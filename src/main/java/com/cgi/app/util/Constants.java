@@ -4,6 +4,9 @@ import java.util.List;
 
 public class Constants {
 
+    private Constants() {
+    }
+
     // --- constants related to the seats and seating plan in the cinema ---
     public static final double SEAT_BEING_OCCUPIED_IN_SEATING_PLAN_PROBABILITY = 0.5;
     // changing the number of seats would currently break front-end

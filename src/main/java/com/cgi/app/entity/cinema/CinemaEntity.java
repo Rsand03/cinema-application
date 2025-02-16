@@ -25,6 +25,7 @@ public class CinemaEntity {
     private final List<MovieEntity> movies = new ArrayList<>();
     private final List<MovieSessionEntity> sessions = new ArrayList<>();
     private final List<SeatEntity> seats = new ArrayList<>();
+    private final Random random = new Random();
 
     /**
      * Initialize Cinema class by generating movies and a seating plan.
@@ -49,7 +50,6 @@ public class CinemaEntity {
      * @param amountOfSessions amount of sessions to be created
      * */
     public void generateSessions(int amountOfSessions) {
-        Random random = new Random();
         for (int i = 0; i < amountOfSessions; i++) {
             MovieEntity movieOfTheSession = movies.get(random.nextInt(0, movies.size()));
             sessions.add(new MovieSessionEntity(movieOfTheSession));
