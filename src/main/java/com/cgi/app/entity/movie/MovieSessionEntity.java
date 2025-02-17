@@ -1,5 +1,7 @@
 package com.cgi.app.entity.movie;
 
+import lombok.Getter;
+
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +10,7 @@ import java.util.Random;
 import static com.cgi.app.util.Constants.MOVIE_SESSION_LANGUAGES;
 import static com.cgi.app.util.Constants.SESSION_STARTING_TIME_MINUTES;
 
+@Getter
 public class MovieSessionEntity {
 
     private final String movieTitle;
@@ -41,30 +44,6 @@ public class MovieSessionEntity {
      * */
     private int getNextId() {
         return nextId++;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getMovieTitle() {
-        return movieTitle;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public String getAgeRating() {
-        return ageRating;
-    }
-
-    public LocalTime getSessionStartTime() {
-        return sessionStartTime;
-    }
-
-    public String getLanguage() {
-        return language;
     }
 
     /**

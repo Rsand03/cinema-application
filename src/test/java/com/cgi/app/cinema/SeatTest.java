@@ -1,14 +1,14 @@
 package com.cgi.app.cinema;
 
-import com.cgi.app.entity.cinema.SeatEntity;
+import com.cgi.app.entity.seat.SeatEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
 import java.util.HashMap;
 
-import static com.cgi.app.entity.cinema.SeatEntity.OccupationStatus.FREE;
-import static com.cgi.app.entity.cinema.SeatEntity.OccupationStatus.SELECTED;
+import static com.cgi.app.entity.seat.SeatEntity.OccupationStatus.FREE;
+import static com.cgi.app.entity.seat.SeatEntity.OccupationStatus.SELECTED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;

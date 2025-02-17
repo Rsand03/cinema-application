@@ -1,17 +1,20 @@
 package com.cgi.app.service;
 
-import com.cgi.app.entity.cinema.CinemaEntity;
+import com.cgi.app.entity.movie.MovieSessionManager;
 import com.cgi.app.entity.movie.MovieSessionEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
-public class CinemaService {
+@RequiredArgsConstructor
+public class MovieSessionService {
 
-    private final CinemaEntity cinema = new CinemaEntity();
+    private final MovieSessionManager cinema = new MovieSessionManager();
 
     /**
      * Get data about all available movie sessions.
@@ -20,6 +23,17 @@ public class CinemaService {
         return cinema.getMovieSessions().stream()
                 .map(MovieSessionEntity::toJson)
                 .toList();
+    }
+
+    /**
+     * Get movie session by its id if the session present.
+     * @param id id of the movie
+     * @return Optional object possibly containing a movie
+     * */
+    public Optional<MovieSessionEntity> getMovieSessionById(int id) {
+        return cinema.getMovieSessions().stream()
+                .filter(x -> x.getId() == id)
+                .findFirst();
     }
 
     /**

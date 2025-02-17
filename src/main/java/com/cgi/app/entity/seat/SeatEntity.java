@@ -1,13 +1,18 @@
-package com.cgi.app.entity.cinema;
+package com.cgi.app.entity.seat;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 import static com.cgi.app.util.Constants.SEAT_BEING_OCCUPIED_IN_SEATING_PLAN_PROBABILITY;
-import static com.cgi.app.entity.cinema.SeatEntity.OccupationStatus.FREE;
-import static com.cgi.app.entity.cinema.SeatEntity.OccupationStatus.OCCUPIED;
+import static com.cgi.app.entity.seat.SeatEntity.OccupationStatus.FREE;
+import static com.cgi.app.entity.seat.SeatEntity.OccupationStatus.OCCUPIED;
 
+@Getter
+@Setter
 public class SeatEntity {
 
     private final int rowNumber;
@@ -34,18 +39,11 @@ public class SeatEntity {
     }
 
     /**
-     * Check if the seat is free.
+     * Check if the seat is free/available.
      * @return boolean
      * */
     public boolean isFree() {
         return occupationStatus.equals(FREE);
-    }
-
-    /**
-     * Set seat occupation status, mainly used for selecting the seat.
-     * */
-    public void setOccupationStatus(OccupationStatus status) {
-        this.occupationStatus = status;
     }
 
     /**
@@ -65,18 +63,6 @@ public class SeatEntity {
             return FREE;
         }
         return OCCUPIED;
-    }
-
-    public int getSeatNumber() {
-        return seatNumber;
-    }
-
-    public int getRowNumber() {
-        return rowNumber;
-    }
-
-    public int getDistanceFromCenter() {
-        return distanceFromCenter;
     }
 
     public String getOccupationStatus() {

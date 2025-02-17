@@ -23,7 +23,7 @@ public class Constants {
 
     // --- constants related to movies ---
     // back-end supports modifying these lists, but front-end has static hardcoded dropdown menus
-    public static final List<String> AVAILABLE_MOVIE_TITLES = List.of(
+    public static final List<String> MOVIE_TITLES = List.of(
             "Barbie", "Oppenheimer", "Avengers", "The Ivory Game", "The Amazon",
             "Dont look up", "Scream", "Saw 1", "Saw 2", "Saw 3", "Saw 4", "Saw 5", "Saw 6"
     );
