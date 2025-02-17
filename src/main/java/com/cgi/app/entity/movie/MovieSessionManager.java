@@ -17,7 +17,7 @@ public class MovieSessionManager {
 
     /**
      * Initialize MovieSessionHandler class by generating movies and sessions.
-     * */
+     */
     public MovieSessionManager() {
         generateMovies();
         generateMovieSessions();
@@ -25,7 +25,7 @@ public class MovieSessionManager {
 
     /**
      * Generate and save new movies with randomized parameters.
-     * */
+     */
     private void generateMovies() {
         for (String movieTitle : MOVIE_TITLES) {
             movies.add(new MovieEntity(movieTitle));
@@ -34,7 +34,7 @@ public class MovieSessionManager {
 
     /**
      * Generate and save new sessions with randomized parameters.
-     * */
+     */
     private void generateMovieSessions() {
         for (int i = 0; i < TOTAL_AVAILABLE_MOVIE_SESSIONS_COUNT; i++) {
             MovieEntity movieOfTheSession = movies.get(random.nextInt(0, movies.size()));
@@ -44,7 +44,7 @@ public class MovieSessionManager {
 
     /**
      * Get all movie sessions sorted by session starting time.
-     * */
+     */
     public List<MovieSessionEntity> getMovieSessions() {
         return sessions.stream()
                 .sorted(Comparator.comparing(MovieSessionEntity::getSessionStartTime))

@@ -1,29 +1,32 @@
 package com.cgi.app.service;
 
-import com.cgi.app.entity.movie.MovieSessionManager;
+import com.cgi.app.dto.MovieSessionDto;
+import com.cgi.app.dto.mapper.MovieMapper;
+import com.cgi.app.dto.mapper.MovieSessionMapper;
 import com.cgi.app.entity.movie.MovieSessionEntity;
+import com.cgi.app.entity.movie.MovieSessionManager;
 import com.cgi.app.repository.MovieSessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MovieSessionService {
 
-    private final MovieSessionManager MovieSessionManagerEntity = MovieSessionRepository.movieSessionManager;
+    private final MovieSessionManager movieSessionManagerEntity = MovieSessionRepository.movieSessionManager;
+    private final MovieMapper movieMapper;
+    private final MovieSessionMapper movieSessionMapper;
 
     /**
      * Get data about all available movie sessions.
      */
-    public List<Map<String, String>> getAvailableMovieSessions() {
-        return MovieSessionManagerEntity.getMovieSessions().stream()
-                .map(MovieSessionEntity::toJson)
-                .toList();
+    public List<MovieSessionDto> getAvailableMovieSessions() {
+        return movieSessionMapper.toDtoList(movieSessionManagerEntity.getMovieSessions());
+
     }
 
     /**
@@ -32,8 +35,8 @@ public class MovieSessionService {
      * @return Optional object possibly containing a movie
      * */
     public Optional<MovieSessionEntity> getMovieSessionById(int id) {
-        return MovieSessionManagerEntity.getMovieSessions().stream()
-                .filter(x -> x.getId() == id)
+        return movieSessionManagerEntity.getMovieSessions().stream()
+                .filter(x -> x.getSessionId() == id)
                 .findFirst();
     }
 
@@ -46,18 +49,18 @@ public class MovieSessionService {
      * @param language required language
      * @return List containing filtered movies.
      * */
-    public List<Map<String, String>> getFilteredMovieSessions(String genre, String ageRating, String sessionStartTime, String language) {
-        List<MovieSessionEntity> result = MovieSessionManagerEntity.getMovieSessions();
+    public List<MovieSessionDto> getFilteredMovieSessions(String genre, String ageRating, String sessionStartTime, String language) {
+        List<MovieSessionEntity> result = movieSessionManagerEntity.getMovieSessions();
 
         // value "-" means that the specific category must not be filtered
         if (!"-".equals(genre)) {  // genre
             result = result.stream()
-                    .filter(x -> x.getGenre().equals(genre))
+                    .filter(x -> x.getMovie().getGenre().equals(genre))
                     .toList();
         }
         if (!"-".equals(ageRating)) {  // age rating
             result = result.stream()
-                    .filter(x -> x.getAgeRating().equals(ageRating))
+                    .filter(x -> x.getMovie().getAgeRating().equals(ageRating))
                     .toList();
         }
         if (!"-".equals(sessionStartTime)) {  // starting time (as hour in 24h format)
@@ -68,14 +71,13 @@ public class MovieSessionService {
         }
         if (!"-".equals(language)) {  // language
             result = result.stream()
-                    .filter(x -> x.getLanguage().equals(language))
+                    .filter(x -> x.getSessionLanguage().equals(language))
                     .toList();
         }
         result = result.stream()
                 .sorted(Comparator.comparing(MovieSessionEntity::getSessionStartTime))
                 .toList();
-        return result.stream()
-                .map(MovieSessionEntity::toJson)
-                .toList();
+        return movieSessionMapper.toDtoList(result);
     }
+
 }

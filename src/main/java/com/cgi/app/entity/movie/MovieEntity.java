@@ -1,6 +1,7 @@
 package com.cgi.app.entity.movie;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Random;
 
@@ -8,6 +9,7 @@ import static com.cgi.app.util.Constants.MOVIE_AGE_RATINGS;
 import static com.cgi.app.util.Constants.MOVIE_GENRES;
 
 @Getter
+@Setter
 public class MovieEntity {
 
     private final String title;

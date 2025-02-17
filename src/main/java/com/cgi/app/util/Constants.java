@@ -35,5 +35,7 @@ public class Constants {
     // back-end supports modifying these lists, but front-end has static hardcoded dropdown menus
     public static final List<Integer> SESSION_STARTING_TIME_MINUTES = List.of(0, 15, 30, 45);
     public static final List<String> MOVIE_SESSION_LANGUAGES = List.of("Estonian", "English", "Russian");
+    public static final int RECOMMENDED_MOVIE_SESSIONS_AMOUNT = 5;
+
 
 }

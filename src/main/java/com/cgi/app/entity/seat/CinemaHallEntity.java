@@ -22,7 +22,7 @@ public class CinemaHallEntity {
     /**
      * Generate a seating plan for the cinema.
      * All seats have a seatNumber and a rowNumber.
-     * */
+     */
     private void generateSeats() {
 
         for (int i = 0; i < TOTAL_SEATS_COUNT; i++) {

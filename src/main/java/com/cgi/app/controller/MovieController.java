@@ -1,8 +1,7 @@
 package com.cgi.app.controller;
 
-import com.cgi.app.entity.movie.MovieSessionManager;
+import com.cgi.app.dto.MovieSessionDto;
 import com.cgi.app.entity.movie.MovieSessionEntity;
-import com.cgi.app.entity.user.UserEntity;
 import com.cgi.app.service.MovieSessionService;
 import com.cgi.app.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,15 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 public class MovieController {
-
-    private final MovieSessionManager cinema = new MovieSessionManager();
-    private final UserEntity user = new UserEntity();
 
     private final MovieSessionService movieSessionService;
     private final UserService userService;
@@ -34,8 +29,8 @@ public class MovieController {
      * "asString": all necessary movie data as a formatted string
      */
     @RequestMapping("/movies")
-    public List<Map<String, String>> getAvailableMovieSessions() {
-        return movieSessionService.getAvailableMovieSessions();
+    public ResponseEntity<List<MovieSessionDto>> getAvailableMovieSessions() {
+        return ResponseEntity.ok(movieSessionService.getAvailableMovieSessions());
     }
 
     /**
@@ -50,11 +45,13 @@ public class MovieController {
      * "asString": all necessary movie data as a formatted string
      */
     @RequestMapping("/movies/filtered")
-    public List<Map<String, String>> getFilteredMovies(@RequestParam String genre,
-                                                       @RequestParam String ageRating,
-                                                       @RequestParam String sessionStartTime,
-                                                       @RequestParam String language) {
-        return movieSessionService.getFilteredMovieSessions(genre, ageRating, sessionStartTime, language);
+    public ResponseEntity<List<MovieSessionDto>> getFilteredMovies(@RequestParam String genre,
+                                                                   @RequestParam String ageRating,
+                                                                   @RequestParam String sessionStartTime,
+                                                                   @RequestParam String language) {
+        return ResponseEntity.ok(
+                movieSessionService.getFilteredMovieSessions(genre, ageRating, sessionStartTime, language)
+        );
     }
 
     /**
@@ -65,14 +62,12 @@ public class MovieController {
      * "asString": all necessary movie data as a formatted string
      */
     @RequestMapping("/movies/recommended")
-    public ResponseEntity<List<Map<String, String>>> getRecommendedMovies() {
-        List<Map<String, String>> result = user.getTopFiveRecommendedMovies(cinema.getMovieSessions()).stream()
-                .map(MovieSessionEntity::toJson)
-                .toList();
+    public ResponseEntity<List<MovieSessionDto>> getRecommendedMovies() {
+        List<MovieSessionDto> result = userService.getTopFiveRecommendedMovies();
         if (result.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return ResponseEntity.ok(result);
     }
 
     /**

@@ -1,12 +1,7 @@
 package com.cgi.app.controller;
 
 import com.cgi.app.dto.SeatDto;
-import com.cgi.app.entity.movie.MovieSessionManager;
-import com.cgi.app.entity.movie.MovieSessionEntity;
-import com.cgi.app.entity.user.UserEntity;
-import com.cgi.app.service.MovieSessionService;
 import com.cgi.app.service.SeatingPlanService;
-import com.cgi.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor

@@ -10,8 +10,6 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface SeatMapper {
 
-    SeatDto toDto(SeatEntity seatEntity);
-
     List<SeatDto> toDtoList(List<SeatEntity> seatEntityList);
 
 }
