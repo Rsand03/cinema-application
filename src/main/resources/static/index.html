@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="normalize.css" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style/normalize.css" />
+    <link rel="stylesheet" href="style/style.css" />
     <script src="./script.js"></script>
     <title>Converter</title>
 </head>
@@ -45,7 +45,7 @@
                     </select>
 
                     <button class="movie-selection-button" type="button" style="margin-left: 2rem"
-                            onclick="loadFilteredMoviesData()">
+                            onclick="fetchFilteredMoviesData()">
                         Apply filter
                     </button>
                 </div>
@@ -66,8 +66,8 @@
                 <p id="error-message-box" style="color: red"></p>
                 <div class="movie-selection-options-container">
                     <p style="margin-right: 15rem"> Select a movie:</p>
-                    <button onclick="loadRecommendedMovies()">Recommended movies</button>
-                    <button onclick="loadMovieData()">All movies</button>
+                    <button onclick="fetchRecommendedMovies()">Recommended movies</button>
+                    <button onclick="fetchMovieData()">All movies</button>
                 </div>
                 <form action="submit" id="movie-selection-form">
                     <div id="movie-selection-container">
@@ -78,7 +78,7 @@
         </div>
     </div>
     <script>
-            loadMovieData();
+            fetchMovieData();
             createTimeFilteringDropdown();
     </script>
 </body>

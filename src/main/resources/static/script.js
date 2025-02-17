@@ -1,3 +1,4 @@
+
 const BACKEND_URL = 'http://localhost:8080';
 
 
@@ -5,7 +6,7 @@ const BACKEND_URL = 'http://localhost:8080';
  * Requests all movie data from back-end.
  * If successful, renders the movie selection form with renderMovieForm() function.
  */
-async function loadMovieData() {
+async function fetchMovieData() {
 
     const url = BACKEND_URL + '/movies';
     const response = await fetch(url, {
@@ -29,7 +30,7 @@ async function loadMovieData() {
  * Filtering options:
  * genre, age rating, "later than" session starting time, language.
  */
-async function loadFilteredMoviesData() {
+async function fetchFilteredMoviesData() {
     const genre = document.getElementById("genre-selection").value;
     const ageRating = document.getElementById("age-rating-selection").value;
     const sessionStartingTime = document.getElementById("session-starting-time-selection").value;
@@ -57,7 +58,7 @@ async function loadFilteredMoviesData() {
  * Requests recommended movies data from back-end based on the current user.
  * If successful, renders the movie selection form with renderMovieForm() function.
  */
-async function loadRecommendedMovies() {
+async function fetchRecommendedMovies() {
     const url = BACKEND_URL + "/movies/recommended"
     const response = await fetch(url,{
         method: 'GET'
@@ -128,16 +129,6 @@ function displayErrorMessage(message_text) {
 
 
 /**
- * Display error message on seating plan page.
- * @param {string} message_text text to display
- */
-function displaySeatErrorMessage(message_text) {
-    const errorMessageBox = document.getElementById("seats-error-message-box");
-    errorMessageBox.innerText = message_text;
-}
-
-
-/**
  * Verify the selection of a movie and pass ticket count to seating page.
  * Back-end adds the movie to user's watching history.
  * Uses processFormData() to get the id of the selected movie.
@@ -156,7 +147,7 @@ async function verifyMovieSelection() {
         if (response.status !== 200) {
             displayErrorMessage("Something went wrong. Please try again.");
         } else {
-            window.location.href = `./seats.html?ticket_count=${ticketCount}`;
+            window.location.href = `seating-plan.html?ticket_count=${ticketCount}`;
         }
     }
 }
@@ -177,55 +168,4 @@ function createTimeFilteringDropdown() {
         dropdownContent += `<option value=${i.toString()}>${i}</option>`
     }
     dropdownMenu.innerHTML = dropdownContent;
-}
-
-
-/**
- * Requests seating plan data from back-end.
- * Displays notification in case no neighbouring seats are available or no seats are available at all.
- */
-async function loadSeatingPlan() {
-    const params = new URLSearchParams(window.location.search);
-    const ticketCount = params.get('ticket_count');
-
-    const url = BACKEND_URL + "/seats" + "?ticketCount=" + ticketCount;
-    const response = await fetch(url,  {
-        method: 'GET'
-    });
-
-    const data = await response.json();
-    // {"seatNumber": seat number, "occupationStatus": state of the seat (FREE / SELECTED / OCCUPIED)}
-    if (response.status !== 200 && response.status !== 206) {
-        displaySeatErrorMessage("No available seats.");
-    } else if (response.status === 206) {
-        displaySeatErrorMessage("Unfortunately no neighbouring seats were available.");
-        renderSeatingPlan(data);
-    } else {
-        renderSeatingPlan(data);
-    }
-}
-
-/**
- * Renders the seating plan based on seating plan data.
- * @param {list} seatingPlanData seating plan data in json format
- * seatingPlanData: {"seatNumber": seat number, "occupationStatus": state of the seat (FREE / SELECTED / OCCUPIED)}
- */
-function renderSeatingPlan(seatingPlanData) {
-    for (const seat of seatingPlanData) {
-        const seatingPlanField = document.getElementById('seating-plan');
-        // create form with radio buttons
-        let displayedSeats = "";
-
-        for (const seat of seatingPlanData) {
-            const seatNumber = seat.seatNumber;
-            let background_color;
-            switch (seat.occupationStatus) {
-                case "FREE": background_color = "lightgray"; break;
-                case "OCCUPIED": background_color = "Red"; break;
-                case "SELECTED": background_color = "Green"; break;
-            }
-            displayedSeats += `<div class="seat" style="background-color: ${background_color}">${seatNumber}</div>`
-        }
-        seatingPlanField.innerHTML = displayedSeats;
-    }
 }
