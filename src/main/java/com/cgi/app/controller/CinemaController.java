@@ -3,6 +3,9 @@ package com.cgi.app.controller;
 import com.cgi.app.entity.cinema.CinemaEntity;
 import com.cgi.app.entity.movie.MovieSessionEntity;
 import com.cgi.app.entity.user.UserEntity;
+import com.cgi.app.service.CinemaService;
+import com.cgi.app.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +18,14 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 public class CinemaController {
 
     private final CinemaEntity cinema = new CinemaEntity();
     private final UserEntity user = new UserEntity();
+
+    private final CinemaService cinemaService;
+    private final UserService userService;
 
     /**
      * Get data about all available movie sessions.
@@ -28,10 +35,8 @@ public class CinemaController {
      * "asString": all necessary movie data as a formatted string
      */
     @RequestMapping("/movies")
-    public List<Map<String, String>> getMovies() {
-        return cinema.getSessions().stream()
-                .map(MovieSessionEntity::toJson)
-                .toList();
+    public List<Map<String, String>> getAvailableMovieSessions() {
+        return cinemaService.getAvailableMovieSessions();
     }
 
     /**
@@ -50,10 +55,7 @@ public class CinemaController {
                                                        @RequestParam String ageRating,
                                                        @RequestParam String sessionStartTime,
                                                        @RequestParam String language) {
-        return cinema.getFilteredSessions(genre, ageRating, sessionStartTime, language)
-                .stream()
-                .map(MovieSessionEntity::toJson)
-                .toList();
+        return cinemaService.getFilteredMovieSessions(genre, ageRating, sessionStartTime, language);
     }
 
     /**
@@ -65,7 +67,7 @@ public class CinemaController {
      */
     @RequestMapping("/movies/recommended")
     public ResponseEntity<List<Map<String, String>>> getFilteredMovies() {
-        List<Map<String, String>> result = user.getTopFiveRecommendedMovies(cinema.getSessions()).stream()
+        List<Map<String, String>> result = user.getTopFiveRecommendedMovies(cinema.getMovieSessions()).stream()
                 .map(MovieSessionEntity::toJson)
                 .toList();
         if (result.isEmpty()) {

@@ -11,13 +11,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+import static com.cgi.app.entity.cinema.SeatEntity.OccupationStatus.SELECTED;
+import static com.cgi.app.util.Constants.AVAILABLE_MOVIE_TITLES;
 import static com.cgi.app.util.Constants.CENTRE_SEAT_COLUMN_NUMBER;
 import static com.cgi.app.util.Constants.CENTRE_SEAT_ROW_NUMBER;
 import static com.cgi.app.util.Constants.SEAT_COLUMNS_COUNT;
-import static com.cgi.app.util.Constants.TOTAL_SEATS_COUNT;
 import static com.cgi.app.util.Constants.TOTAL_AVAILABLE_MOVIE_SESSIONS_COUNT;
-import static com.cgi.app.util.Constants.AVAILABLE_MOVIE_TITLES;
-import static com.cgi.app.entity.cinema.SeatEntity.OccupationStatus.SELECTED;
+import static com.cgi.app.util.Constants.TOTAL_SEATS_COUNT;
 
 
 public class CinemaEntity {
@@ -32,14 +32,14 @@ public class CinemaEntity {
      * */
     public CinemaEntity() {
         generateMovies();
-        generateSessions(TOTAL_AVAILABLE_MOVIE_SESSIONS_COUNT);
+        generateMovieSessions();
         generateSeats();
     }
 
     /**
      * Generate and save new movies with randomized parameters.
      * */
-    public void generateMovies() {
+    private void generateMovies() {
         for (String movieTitle : AVAILABLE_MOVIE_TITLES) {
             movies.add(new MovieEntity(movieTitle));
         }
@@ -47,10 +47,9 @@ public class CinemaEntity {
 
     /**
      * Generate and save new sessions with randomized parameters.
-     * @param amountOfSessions amount of sessions to be created
      * */
-    public void generateSessions(int amountOfSessions) {
-        for (int i = 0; i < amountOfSessions; i++) {
+    private void generateMovieSessions() {
+        for (int i = 0; i < TOTAL_AVAILABLE_MOVIE_SESSIONS_COUNT; i++) {
             MovieEntity movieOfTheSession = movies.get(random.nextInt(0, movies.size()));
             sessions.add(new MovieSessionEntity(movieOfTheSession));
         }
@@ -143,44 +142,6 @@ public class CinemaEntity {
     }
 
     /**
-     * Filter available movies by genre, age rating, starting time and language.
-     * TODO: Make front-end dropdown menus (that contain filtering options) dynamic.
-     * @param genre required genre
-     * @param ageRating required age rating
-     * @param startingHour minimum starting time
-     * @param language required language
-     * @return List containing filtered movies.
-     * */
-    public List<MovieSessionEntity> getFilteredSessions(String genre, String ageRating, String startingHour, String language) {
-        List<MovieSessionEntity> result = new ArrayList<>(sessions);
-        // value "-" means that the specific category must not be filtered
-        if (!"-".equals(genre)) {  // genre
-            result = result.stream()
-                    .filter(x -> x.getGenre().equals(genre))
-                    .toList();
-        }
-        if (!"-".equals(ageRating)) {  // age rating
-            result = result.stream()
-                    .filter(x -> x.getAgeRating().equals(ageRating))
-                    .toList();
-        }
-        if (!"-".equals(startingHour)) {  // starting time (hour)
-            int hour = Integer.parseInt(startingHour);
-            result = result.stream()
-                    .filter(x -> x.getSessionStartTime().getHour() > hour)
-                    .toList();
-        }
-        if (!"-".equals(language)) {  // language
-            result = result.stream()
-                    .filter(x -> x.getLanguage().equals(language))
-                    .toList();
-        }
-        return result.stream()
-                .sorted(Comparator.comparing(MovieSessionEntity::getSessionStartTime))
-                .toList();
-    }
-
-    /**
      * Get session by its id if the session present.
      * @param id id of the movie
      * @return Optional object possibly containing a movie
@@ -190,9 +151,9 @@ public class CinemaEntity {
     }
 
     /**
-     * Get sessions sorted by session starting time.
+     * Get movie sessions sorted by session starting time.
      * */
-    public List<MovieSessionEntity> getSessions() {
+    public List<MovieSessionEntity> getMovieSessions() {
         return sessions.stream()
                 .sorted(Comparator.comparing(MovieSessionEntity::getSessionStartTime))
                 .toList();
