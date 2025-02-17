@@ -17,7 +17,6 @@ public class MovieSessionEntity {
     private final LocalTime sessionStartTime;
     private final String sessionLanguage;
     private final int sessionId;
-    private static int nextSessionId = 1;
 
     /**
      * Initialize Session with a movie and random session parameters.
@@ -25,7 +24,7 @@ public class MovieSessionEntity {
      *
      * @param movie movie of the session
      */
-    public MovieSessionEntity(MovieEntity movie) {
+    public MovieSessionEntity(MovieEntity movie, Integer sessionId) {
         Random random = new Random();
 
         this.movie = movie;
@@ -34,14 +33,7 @@ public class MovieSessionEntity {
                 SESSION_STARTING_TIME_MINUTES.get(random.nextInt(0, SESSION_STARTING_TIME_MINUTES.size())));  // minutes
         this.sessionLanguage = MOVIE_SESSION_LANGUAGES.get(random.nextInt(0, MOVIE_SESSION_LANGUAGES.size()));
 
-        this.sessionId = this.getNextSessionId();
-    }
-
-    /**
-     * Calculate id for the next session.
-     */
-    private int getNextSessionId() {
-        return nextSessionId++;
+        this.sessionId = sessionId;
     }
 
 }

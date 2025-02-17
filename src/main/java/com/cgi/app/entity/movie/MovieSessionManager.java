@@ -38,7 +38,7 @@ public class MovieSessionManager {
     private void generateMovieSessions() {
         for (int i = 0; i < TOTAL_AVAILABLE_MOVIE_SESSIONS_COUNT; i++) {
             MovieEntity movieOfTheSession = movies.get(random.nextInt(0, movies.size()));
-            sessions.add(new MovieSessionEntity(movieOfTheSession));
+            sessions.add(new MovieSessionEntity(movieOfTheSession, i));
         }
     }
 

@@ -20,8 +20,8 @@ import static com.cgi.app.util.Constants.RECOMMENDED_MOVIE_SESSIONS_AMOUNT;
 public class UserService {
 
     // Mocked repository functionality without DB
-    private final UserEntity userEntity = UserRepository.userEntity;
-    private final MovieSessionManager movieSessionManagerEntity = MovieSessionRepository.movieSessionManager;
+    private static final UserEntity userEntity = UserRepository.userEntity;
+    private static final MovieSessionManager movieSessionManagerEntity = MovieSessionRepository.movieSessionManager;
     private final MovieSessionMapper movieSessionMapper;
 
 

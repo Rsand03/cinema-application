@@ -17,8 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MovieSessionService {
 
-    private final MovieSessionManager movieSessionManagerEntity = MovieSessionRepository.movieSessionManager;
-    private final MovieMapper movieMapper;
+    private static final MovieSessionManager movieSessionManagerEntity = MovieSessionRepository.movieSessionManager;
     private final MovieSessionMapper movieSessionMapper;
 
     /**
