@@ -1,22 +1,27 @@
 package com.cgi.app.service;
 
+import com.cgi.app.dto.SeatDto;
+import com.cgi.app.dto.mapper.SeatMapper;
 import com.cgi.app.entity.seat.CinemaHallEntity;
 import com.cgi.app.entity.seat.SeatEntity;
+import com.cgi.app.repository.CinemaHallRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static com.cgi.app.entity.seat.SeatEntity.OccupationStatus.SELECTED;
 
+@RequiredArgsConstructor
 @Service
 public class SeatingPlanService {
 
-    private final CinemaHallEntity cinemaHall = new CinemaHallEntity();
-
+    // Mocked repository functionality
+    private final CinemaHallEntity cinemaHallEntity = CinemaHallRepository.cinemaHallEntity;
+    private final SeatMapper seatMapper;
 
     /**
      * Generate a random occupation status for all seats.
@@ -26,8 +31,8 @@ public class SeatingPlanService {
      * @param ticketCount amount of seats to be selected
      * @return list containing json data about all seats
      */
-    public Optional<List<Map<String, String>>> getSeatingPlanWithNeighbouringSeats(int ticketCount) {
-        List<SeatEntity> seats = cinemaHall.getSeats();
+    public Optional<List<SeatDto>> getSeatingPlanWithNeighbouringSeats(int ticketCount) {
+        List<SeatEntity> seats = cinemaHallEntity.getSeats();
         seats.forEach(SeatEntity::setRandomOccupationStatus);  // generate random occupation status for each seat
 
         HashMap<List<SeatEntity>, Integer> neighbouringSeatsCombinations = new HashMap<>();
@@ -44,18 +49,14 @@ public class SeatingPlanService {
             }
         }
 
-        Optional<List<SeatEntity>> bestNeighbouringSeatsCombination = neighbouringSeatsCombinations
-                .keySet()
+        Optional<List<SeatEntity>> bestNeighbouringSeatsCombination = neighbouringSeatsCombinations.keySet()
                 .stream()
                 .min(Comparator
                         .comparing(neighbouringSeatsCombinations::get));  // compare by combined distanceFromCenter
 
         if (bestNeighbouringSeatsCombination.isPresent()) {
             bestNeighbouringSeatsCombination.get().forEach(x -> x.setOccupationStatus(SELECTED));  // select the seats
-            return Optional.of(seats.stream()
-                    .map(SeatEntity::toJson)
-                    .toList()
-            );
+            return Optional.of(seatMapper.toDtoList(seats));
         }
         return Optional.empty();
     }
@@ -73,7 +74,6 @@ public class SeatingPlanService {
         return allSeatsAreFree && allSeatsAreInSameRow;
     }
 
-
     /**
      * Select the best available seats, even when they are not neighbouring.
      * TODO: Try to get a smaller amount of neighbouring seats instead of any (closest to center) seats.
@@ -81,8 +81,8 @@ public class SeatingPlanService {
      * @param ticketCount amount of seats to be selected
      * @return list containing json data about all seats
      */
-    public Optional<List<Map<String, String>>> getAnySeatingPlan(int ticketCount) {
-        List<SeatEntity> seats = cinemaHall.getSeats();
+    public Optional<List<SeatDto>> getAnySeatingPlan(int ticketCount) {
+        List<SeatEntity> seats = cinemaHallEntity.getSeats();
 
         List<SeatEntity> result = seats.stream()
                 .filter(SeatEntity::isFree)
@@ -91,9 +91,7 @@ public class SeatingPlanService {
         if (result.size() >= ticketCount) {
             // select best seats (closest to the centre)
             result.subList(0, ticketCount).forEach(x -> x.setOccupationStatus(SELECTED));
-            return Optional.of(seats.stream()
-                    .map(SeatEntity::toJson)
-                    .toList());
+            return Optional.of(seatMapper.toDtoList(seats));
         }
         return Optional.empty();
     }

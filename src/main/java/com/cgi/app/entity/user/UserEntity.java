@@ -1,6 +1,7 @@
 package com.cgi.app.entity.user;
 
 import com.cgi.app.entity.movie.MovieSessionEntity;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import static com.cgi.app.util.Constants.MOVIE_GENRES;
 
+@Getter
 public class UserEntity {
 
     private final HashMap<String, Integer> genresWatched = new HashMap<>();
@@ -53,16 +55,16 @@ public class UserEntity {
         if (moviesWatched.isEmpty()) {
             return List.of();
         }
-        List<MovieSessionEntity> result = movieSessions.stream()
+        List<MovieSessionEntity> bestMovies = movieSessions.stream()
                 .filter(x -> !moviesWatched.contains(x.getMovieTitle()))  // filter out already watched movies
                 .sorted(Comparator
                         .comparing(this::getTimesGenreWatched))
                 .toList()
                 .reversed();
-        if (result.size() <= 5) {
-            return result;
+        if (bestMovies.size() <= 5) {
+            return bestMovies;
         }
-        return result.subList(0, 6);
+        return bestMovies.subList(0, 6);
     }
 
 }

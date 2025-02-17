@@ -2,6 +2,7 @@ package com.cgi.app.service;
 
 import com.cgi.app.entity.movie.MovieSessionManager;
 import com.cgi.app.entity.movie.MovieSessionEntity;
+import com.cgi.app.repository.MovieSessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +15,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MovieSessionService {
 
-    private final MovieSessionManager cinema = new MovieSessionManager();
+    private final MovieSessionManager MovieSessionManagerEntity = MovieSessionRepository.movieSessionManager;
 
     /**
      * Get data about all available movie sessions.
      */
     public List<Map<String, String>> getAvailableMovieSessions() {
-        return cinema.getMovieSessions().stream()
+        return MovieSessionManagerEntity.getMovieSessions().stream()
                 .map(MovieSessionEntity::toJson)
                 .toList();
     }
@@ -31,7 +32,7 @@ public class MovieSessionService {
      * @return Optional object possibly containing a movie
      * */
     public Optional<MovieSessionEntity> getMovieSessionById(int id) {
-        return cinema.getMovieSessions().stream()
+        return MovieSessionManagerEntity.getMovieSessions().stream()
                 .filter(x -> x.getId() == id)
                 .findFirst();
     }
@@ -46,7 +47,7 @@ public class MovieSessionService {
      * @return List containing filtered movies.
      * */
     public List<Map<String, String>> getFilteredMovieSessions(String genre, String ageRating, String sessionStartTime, String language) {
-        List<MovieSessionEntity> result = cinema.getMovieSessions();
+        List<MovieSessionEntity> result = MovieSessionManagerEntity.getMovieSessions();
 
         // value "-" means that the specific category must not be filtered
         if (!"-".equals(genre)) {  // genre

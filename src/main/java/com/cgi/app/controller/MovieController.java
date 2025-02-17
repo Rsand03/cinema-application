@@ -4,7 +4,6 @@ import com.cgi.app.entity.movie.MovieSessionManager;
 import com.cgi.app.entity.movie.MovieSessionEntity;
 import com.cgi.app.entity.user.UserEntity;
 import com.cgi.app.service.MovieSessionService;
-import com.cgi.app.service.SeatingPlanService;
 import com.cgi.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,13 +18,12 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-public class CinemaController {
+public class MovieController {
 
     private final MovieSessionManager cinema = new MovieSessionManager();
     private final UserEntity user = new UserEntity();
 
     private final MovieSessionService movieSessionService;
-    private final SeatingPlanService seatingPlanService;
     private final UserService userService;
 
     /**
@@ -83,35 +81,13 @@ public class CinemaController {
      * @return Http status 200: verification was successful
      */
     @RequestMapping("/movies/selection")
-    public ResponseEntity<HttpStatus> verifyMovieSessionSelection(@RequestParam Integer id) {
+    public ResponseEntity<HttpStatus> applyMovieSessionSelection(@RequestParam Integer id) {
         Optional<MovieSessionEntity> selectedMovieSession = movieSessionService.getMovieSessionById(id);
         if (selectedMovieSession.isPresent()) {
             userService.addToWatchingHistory(selectedMovieSession.get());
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    /**
-     * Get seating plan data.
-     * Http status 200: found neighbouring seats
-     * Http status 206: found seats, but not neighbouring
-     *
-     * @param ticketCount amount of seats to select
-     * @return seating plan in json format, HashMap for each seat:
-     * "seatNumber": seat number
-     * "occupationStatus": state of the seat (FREE / SELECTED / OCCUPIED)
-     */
-    @RequestMapping("/seats")
-    public ResponseEntity<List<Map<String, String>>> getRandomSeatingPlan(@RequestParam Integer ticketCount) {
-        return seatingPlanService.getSeatingPlanWithNeighbouringSeats(ticketCount)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> seatingPlanService.getAnySeatingPlan(ticketCount)
-                        .map(seatingPlanWithAnySeats ->
-                                new ResponseEntity<>(seatingPlanWithAnySeats, HttpStatus.PARTIAL_CONTENT))
-                        .orElseGet(() ->
-                                new ResponseEntity<>(HttpStatus.NO_CONTENT)
-                        ));
     }
 
 }
