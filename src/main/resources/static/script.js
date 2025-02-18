@@ -120,11 +120,11 @@ function processFormData(form_id) {
 
 /**
  * Display error message on home page.
- * @param {string} message_text text to display
+ * @param {string} messageText text to display
  */
-function displayErrorMessage(message_text) {
+function displayErrorMessage(messageText) {
     const errorMessageBox = document.getElementById("error-message-box");
-    errorMessageBox.innerText = message_text;
+    errorMessageBox.innerText = messageText;
 }
 
 
@@ -152,10 +152,56 @@ async function verifyMovieSelection() {
     }
 }
 
+/**
+ * Fetch dropdown menu content from backend and create the dropdown menus.
+ */
+async function fetchFilteringParameters() {
+
+    const url = BACKEND_URL + '/movies/attributes';
+    const response = await fetch(url,  {
+        method: 'GET'
+    });
+    if (response.status !== 200) {
+        displayErrorMessage("Couldn't load dropdown menu content");
+    } else {
+        const data = await response.json();
+        createFilteringDropdownMenus(data);
+    }
+}
+
+/**
+ * Create dropdown menus for selecting movie filtering parameters.
+ * @param {json} movieAttributes text to display
+ */
+function createFilteringDropdownMenus(movieAttributes) {
+
+    for (const genreOption of movieAttributes.genres) {
+        let genreOptions = `<option value="-" selected>-</option>`
+        genreOptions +=
+            `<option value="${genreOption}">${genreOption}</option>`
+    }
+    for (const ageRating of movieAttributes.ageRatings) {
+        let ageRatingOptions = `<option value="-" selected>-</option>`
+        ageRatingOptions +=
+            `<option value="${ageRating}">${ageRating}</option>`
+    }
+    for (const language of movieAttributes.languages) {
+        let languageOptions = `<option value="-" selected>-</option>`
+        languageOptions +=
+            `<option value="${language}">${language}</option>`
+    }
+
+    const genreDropdown = document.getElementById("genre-selection");
+    const ageRatingDropdown = document.getElementById("age-rating-selection");
+    const languageDropdown = document.getElementById("language-selection");
+
+    genreDropdown.innerHTML = genreOptions;
+    ageRatingDropdown.innerHTML = ageRatingOptions;
+    languageDropdown.innerHTML = languageOptions
+}
 
 /**
  * Generates the content of a filtering options dropdown menu.
- * TODO: Make all dropdown menus dynamic by requesting the content data from back-end.
  */
 function createTimeFilteringDropdown() {
     const dropdownMenu = document.getElementById("session-starting-time-selection");
