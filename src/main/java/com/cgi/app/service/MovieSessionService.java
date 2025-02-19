@@ -2,6 +2,7 @@ package com.cgi.app.service;
 
 import com.cgi.app.dto.MovieSessionAttributesDto;
 import com.cgi.app.dto.MovieSessionDto;
+import com.cgi.app.dto.MovieSessionFilteringDto;
 import com.cgi.app.dto.mapper.MovieSessionMapper;
 import com.cgi.app.entity.movie.MovieSessionEntity;
 import com.cgi.app.entity.movie.MovieSessionManager;
@@ -62,38 +63,30 @@ public class MovieSessionService {
     }
 
     /**
-     * Filter available movie sessions by genre, age rating, starting time and language.
-     * TODO: Make front-end dropdown menus (that contain filtering options) dynamic.
-     *
-     * @param genre            required genre
-     * @param ageRating        required age rating
-     * @param sessionStartTime minimum starting time (as hour in 24h format)
-     * @param language         required language
+     * Filter available movie sessions by (optional) genre, age rating, starting time and language.
      * @return List containing filtered movies.
      */
-    public List<MovieSessionDto> getFilteredMovieSessions(String genre, String ageRating, String sessionStartTime, String language) {
+    public List<MovieSessionDto> getFilteredMovieSessions(MovieSessionFilteringDto filteringParams) {
         List<MovieSessionEntity> result = movieSessionManagerEntity.getMovieSessions();
 
-        // value "-" means that the specific category must not be filtered
-        if (!"-".equals(genre)) {  // genre
+        if (filteringParams.getGenre() != null) {  // genre
             result = result.stream()
-                    .filter(x -> x.getMovie().getGenre().equals(genre))
+                    .filter(x -> x.getMovie().getGenre().equals(filteringParams.getGenre()))
                     .toList();
         }
-        if (!"-".equals(ageRating)) {  // age rating
+        if (filteringParams.getAgeRating() != null) {  // age rating
             result = result.stream()
-                    .filter(x -> x.getMovie().getAgeRating().equals(ageRating))
+                    .filter(x -> x.getMovie().getAgeRating().equals(filteringParams.getAgeRating()))
                     .toList();
         }
-        if (!"-".equals(sessionStartTime)) {  // starting time (as hour in 24h format)
-            int hour = Integer.parseInt(sessionStartTime);
+        if (filteringParams.getSessionStartTime() != null) {  // starting time (as hour in 24h format)
             result = result.stream()
-                    .filter(x -> x.getSessionStartTime().getHour() > hour)
+                    .filter(x -> x.getSessionStartTime().getHour() > filteringParams.getSessionStartTime())
                     .toList();
         }
-        if (!"-".equals(language)) {  // language
+        if (filteringParams.getLanguage() != null) {  // language
             result = result.stream()
-                    .filter(x -> x.getSessionLanguage().equals(language))
+                    .filter(x -> x.getSessionLanguage().equals(filteringParams.getLanguage()))
                     .toList();
         }
         result = result.stream()

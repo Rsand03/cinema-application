@@ -22,7 +22,6 @@ public class MovieSessionEntity {
 
     /**
      * Initialize Session with a movie and random session parameters.
-     * TODO: Add a date to each session.
      *
      * @param movie movie of the session
      */

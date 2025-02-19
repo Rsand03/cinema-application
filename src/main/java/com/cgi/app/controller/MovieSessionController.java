@@ -2,6 +2,7 @@ package com.cgi.app.controller;
 
 import com.cgi.app.dto.MovieSessionAttributesDto;
 import com.cgi.app.dto.MovieSessionDto;
+import com.cgi.app.dto.MovieSessionFilteringDto;
 import com.cgi.app.entity.movie.MovieSessionEntity;
 import com.cgi.app.service.MovieSessionService;
 import com.cgi.app.service.UserService;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,10 +22,22 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/movies")
 @RequiredArgsConstructor
-public class MovieController {
+public class MovieSessionController {
 
     private final MovieSessionService movieSessionService;
     private final UserService userService;
+
+
+    /**
+     * Get all movie attributes such as available age ratings, languages etc.
+     *
+     * @return A {@link MovieSessionAttributesDto} containing distinct genres, age ratings,
+     * session starting times, and languages.
+     */
+    @GetMapping("/attributes")
+    public ResponseEntity<MovieSessionAttributesDto> getMovieSessionAttributes() {
+        return ResponseEntity.ok(movieSessionService.getMovieSessionAttributes());
+    }
 
     /**
      * Get data about all available movie sessions.
@@ -38,34 +52,17 @@ public class MovieController {
     }
 
     /**
-     * Get all movie attributes such as available age ratings, languages etc.
+     * Get data about movie sessions that match the filtering criteria.
+     * The filtering criteria (genre, age rating, session start time, and language)
+     * are passed in the {@link MovieSessionFilteringDto}.
      *
-     * @return A {@link MovieSessionAttributesDto} containing distinct genres, age ratings,
-     * session starting times, and languages.
+     * @param filteringParams contains the filtering criteria for movie sessions.
+     * @return a list of filtered movie sessions in JSON format.
      */
-    @GetMapping("/attributes")
-    public ResponseEntity<MovieSessionAttributesDto> getMovieSessionAttributes() {
-        return ResponseEntity.ok(movieSessionService.getMovieSessionAttributes());
-    }
-
-    /**
-     * Get data about all movie sessions that match the specified criteria.
-     *
-     * @param genre            required movie genre
-     * @param ageRating        required movie age rating
-     * @param sessionStartTime earliest acceptable session starting time
-     * @param language         required language of the session
-     * @return data in json format, HashMap for each movie session:
-     * "id": movie session id
-     * "asString": all necessary movie data as a formatted string
-     */
-    @GetMapping("/filtered")
-    public ResponseEntity<List<MovieSessionDto>> getFilteredMovies(@RequestParam String genre,
-                                                                   @RequestParam String ageRating,
-                                                                   @RequestParam String sessionStartTime,
-                                                                   @RequestParam String language) {
+    @GetMapping("filtered")
+    public ResponseEntity<List<MovieSessionDto>> getFilteredMovies(@ModelAttribute MovieSessionFilteringDto filteringParams) {
         return ResponseEntity.ok(
-                movieSessionService.getFilteredMovieSessions(genre, ageRating, sessionStartTime, language)
+                movieSessionService.getFilteredMovieSessions(filteringParams)
         );
     }
 
@@ -86,7 +83,7 @@ public class MovieController {
     }
 
     /**
-     * Verify selected movie session and add it to user's watching history.
+     * Verify selected movie session and add it to user's watching history in order to recommend movies in the future.
      *
      * @return Http status 200: verification was successful
      */

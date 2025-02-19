@@ -35,11 +35,13 @@ async function fetchFilteredMoviesData() {
     const sessionStartingTime = document.getElementById("session-starting-time-selection").value;
     const language = document.getElementById("language-selection").value;
 
-    const url = BACKEND_URL + "/movies/filtered" +
-        "?genre=" + genre +
-        "&ageRating=" + ageRating +
-        "&sessionStartTime=" + sessionStartingTime +
-        "&language=" + language;
+    const params = [];
+    if (genre) params.push(`genre=${genre}`);
+    if (ageRating) params.push(`ageRating=${ageRating}`);
+    if (sessionStartingTime) params.push(`sessionStartTime=${sessionStartingTime}`);
+    if (language) params.push(`language=${language}`);
+
+    const url = BACKEND_URL + "/movies/filtered?" + params.join('&');
     const response = await fetch(url, {
         method: 'GET'
     });
@@ -177,10 +179,10 @@ async function fetchFilteringOptions() {
  * @returns {string} String containing the generated HTML option elements.
  */
 function createFormOptions(optionsData) {
-    let formOptions = `<option value="-" selected>-</option>`
-    for (const genreOption of optionsData) {
+    let formOptions = `<option selected></option>`
+    for (const option of optionsData) {
         formOptions +=
-            `<option value="${genreOption}">${genreOption}</option>`
+            `<option value="${option}">${option}</option>`
     }
     return formOptions;
 }
