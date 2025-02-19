@@ -46,9 +46,9 @@ After clicking the "BUY" button, the user is directed to the seating plan of the
 
 ## Some examples of the front-end
 
-![Alt text](https://github.com/Rsand03/cinema-application/blob/dev/src/main/resources/assets/cinema-example.png)
+![Alt text](https://github.com/Rsand03/cinema-application/blob/main/src/main/resources/assets/cinema-example.png)
 
-![Alt text](https://github.com/Rsand03/cinema-application/blob/dev/src/main/resources/assets/cinema-example-2.png)
+![Alt text](https://github.com/Rsand03/cinema-application/blob/main/src/main/resources/assets/cinema-example-2.png)
 
 ## Contributing
 
