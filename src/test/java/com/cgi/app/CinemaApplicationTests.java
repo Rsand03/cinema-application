@@ -1,4 +1,4 @@
-package com.cgi.cinema;
+package com.cgi.app;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +8,7 @@ class CinemaApplicationTests {
 
     @Test
     void contextLoads() {
+        // placeholder
     }
 
 }
