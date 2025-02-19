@@ -11,6 +11,7 @@ import static com.cgi.app.util.Constants.TOTAL_AVAILABLE_MOVIE_SESSIONS_COUNT;
 
 public class MovieSessionManager {
 
+    // Mocked entity without DB
     private final List<MovieEntity> movies = new ArrayList<>();
     private final List<MovieSessionEntity> sessions = new ArrayList<>();
     private final Random random = new Random();

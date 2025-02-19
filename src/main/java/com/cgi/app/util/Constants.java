@@ -21,21 +21,33 @@ public class Constants {
     public static final int TOTAL_AVAILABLE_MOVIE_SESSIONS_COUNT = 35;
 
 
+    // --- constants related to (movie) sessions ---
+    public static final List<Integer> MOVIE_SESSION_STARTING_TIME_HOURS = java.util.stream.IntStream.rangeClosed(8, 23)
+            .boxed()
+            .toList();
+    public static final List<Integer> MOVIE_SESSION_STARTING_TIME_MINUTES = List.of(0, 15, 30, 45);
+    public static final List<String> MOVIE_SESSION_LANGUAGES = List.of("Estonian", "English", "Ukrainian");
+    public static final int RECOMMENDED_MOVIE_SESSIONS_AMOUNT = 5;
+
+
     // --- constants related to movies ---
-    // back-end supports modifying these lists, but front-end has static hardcoded dropdown menus
     public static final List<String> MOVIE_TITLES = List.of(
-            "Barbie", "Oppenheimer", "Avengers", "The Ivory Game", "The Amazon",
-            "Dont look up", "Scream", "Saw 1", "Saw 2", "Saw 3", "Saw 4", "Saw 5", "Saw 6"
+            "Barbie",
+            "Oppenheimer",
+            "Avengers",
+            "The Ivory Game",
+            "The Amazon",
+            "Dont look up",
+            "Scream",
+            "Saw 1",
+            "Saw 2",
+            "Saw 3",
+            "Saw 4",
+            "Saw 5",
+            "Saw 6"
     );
     public static final List<String> MOVIE_GENRES = List.of("Comedy", "Action", "Horror", "Nature");
     public static final List<String> MOVIE_AGE_RATINGS = List.of("G", "PG", "PG-13", "NC-17");
-
-
-    // --- constants related to (movie) sessions ---
-    // back-end supports modifying these lists, but front-end has static hardcoded dropdown menus
-    public static final List<Integer> SESSION_STARTING_TIME_MINUTES = List.of(0, 15, 30, 45);
-    public static final List<String> MOVIE_SESSION_LANGUAGES = List.of("Estonian", "English", "Russian");
-    public static final int RECOMMENDED_MOVIE_SESSIONS_AMOUNT = 5;
 
 
 }

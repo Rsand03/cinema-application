@@ -12,6 +12,7 @@ import static com.cgi.app.util.Constants.MOVIE_GENRES;
 @Getter
 public class UserEntity {
 
+    // Mocked entity without DB
     private final HashMap<String, Integer> genresWatched = new HashMap<>();
     private final List<String> alreadyWatchedMovies = new ArrayList<>();
 

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="normalize.css" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style/normalize.css" />
+    <link rel="stylesheet" href="style/style.css" />
     <script src="./script.js"></script>
     <title>Converter</title>
 </head>
@@ -16,20 +16,10 @@
                 <div class="filtering-options-container">
                     <label for="genre-selection">Genre</label>
                     <select class="filter-dropdown" id="genre-selection">
-                        <option value="-" selected>-</option>
-                        <option value="Comedy">Comedy</option>
-                        <option value="Action">Action</option>
-                        <option value="Horror">Horror</option>
-                        <option value="Nature">Nature</option>
                     </select>
 
                     <label for="age-rating-selection">&emsp;Age rating</label>
                     <select class="filter-dropdown" id="age-rating-selection">
-                        <option value="-" selected>-</option>
-                        <option value="G">G</option>
-                        <option value="PG">PG</option>
-                        <option value="PG-13">PG-13</option>
-                        <option value="NC-17">NC-17</option>
                     </select>
 
                     <label for="session-starting-time-selection">&emsp;Sessions later than</label>
@@ -38,14 +28,10 @@
 
                     <label for="language-selection">&emsp;Language</label>
                     <select class="filter-dropdown" id="language-selection">
-                        <option value="-" selected>-</option>
-                        <option value="Estonian">Estonian</option>
-                        <option value="English">English</option>
-                        <option value="Russian">Russian</option>
                     </select>
 
                     <button class="movie-selection-button" type="button" style="margin-left: 2rem"
-                            onclick="loadFilteredMoviesData()">
+                            onclick="fetchFilteredMoviesData()">
                         Apply filter
                     </button>
                 </div>
@@ -58,16 +44,15 @@
                         <option value=4>4</option>
                         <option value=5>5</option>
                     </select>
-                    <button class="ticket-buying-button" type="button"
-                            onclick="verifyMovieSelection()">
+                    <button class="ticket-buying-button" type="button" onclick="verifyMovieSelection()">
                         BUY
                     </button>
                 </div>
                 <p id="error-message-box" style="color: red"></p>
                 <div class="movie-selection-options-container">
                     <p style="margin-right: 15rem"> Select a movie:</p>
-                    <button onclick="loadRecommendedMovies()">Recommended movies</button>
-                    <button onclick="loadMovieData()">All movies</button>
+                    <button onclick="fetchRecommendedMovies()">Recommended movies</button>
+                    <button onclick="fetchMovieData()">All movies</button>
                 </div>
                 <form action="submit" id="movie-selection-form">
                     <div id="movie-selection-container">
@@ -78,8 +63,8 @@
         </div>
     </div>
     <script>
-            loadMovieData();
-            createTimeFilteringDropdown();
+            fetchMovieData();
+            fetchFilteringOptions();
     </script>
 </body>
 </html>

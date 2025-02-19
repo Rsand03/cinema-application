@@ -12,12 +12,13 @@ import static com.cgi.app.util.Constants.MOVIE_GENRES;
 @Setter
 public class MovieEntity {
 
+    // Mocked entity without DB
     private final String title;
     private final String genre;
     private final String ageRating;
 
     /**
-     * Initialize Movie class with randomized parameters.
+     * Initialize MovieEntity class with randomized parameters.
      * The Movie class is used just as an input for Session class, which
      * links each movie title to specific age rating and genre.
      */

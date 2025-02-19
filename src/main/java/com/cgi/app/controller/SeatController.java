@@ -5,6 +5,7 @@ import com.cgi.app.service.SeatingPlanService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
+@RequestMapping("api/seats")
 @RequiredArgsConstructor
 public class SeatController {
 
@@ -27,7 +29,7 @@ public class SeatController {
      * "seatNumber": seat number
      * "occupationStatus": state of the seat (FREE / SELECTED / OCCUPIED)
      */
-    @RequestMapping("/seats")
+    @GetMapping("")
     public ResponseEntity<List<SeatDto>> getRandomSeatingPlan(@RequestParam Integer ticketCount) {
         return seatingPlanService.getSeatingPlanWithNeighbouringSeats(ticketCount)
                 .map(ResponseEntity::ok)

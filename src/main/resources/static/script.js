@@ -1,11 +1,11 @@
-const BACKEND_URL = 'http://localhost:8080';
+const BACKEND_URL = 'http://localhost:8080/api';
 
 
 /**
  * Requests all movie data from back-end.
  * If successful, renders the movie selection form with renderMovieForm() function.
  */
-async function loadMovieData() {
+async function fetchMovieData() {
 
     const url = BACKEND_URL + '/movies';
     const response = await fetch(url, {
@@ -29,18 +29,20 @@ async function loadMovieData() {
  * Filtering options:
  * genre, age rating, "later than" session starting time, language.
  */
-async function loadFilteredMoviesData() {
+async function fetchFilteredMoviesData() {
     const genre = document.getElementById("genre-selection").value;
     const ageRating = document.getElementById("age-rating-selection").value;
     const sessionStartingTime = document.getElementById("session-starting-time-selection").value;
     const language = document.getElementById("language-selection").value;
 
-    const url = BACKEND_URL + "/movies/filtered" +
-        "?genre=" + genre +
-        "&ageRating=" + ageRating +
-        "&sessionStartTime=" + sessionStartingTime +
-        "&language=" + language;
-    const response = await fetch(url,{
+    const params = [];
+    if (genre) params.push(`genre=${genre}`);
+    if (ageRating) params.push(`ageRating=${ageRating}`);
+    if (sessionStartingTime) params.push(`sessionStartTime=${sessionStartingTime}`);
+    if (language) params.push(`language=${language}`);
+
+    const url = BACKEND_URL + "/movies/filtered?" + params.join('&');
+    const response = await fetch(url, {
         method: 'GET'
     });
     if (response.status !== 200) {
@@ -57,9 +59,9 @@ async function loadFilteredMoviesData() {
  * Requests recommended movies data from back-end based on the current user.
  * If successful, renders the movie selection form with renderMovieForm() function.
  */
-async function loadRecommendedMovies() {
+async function fetchRecommendedMovies() {
     const url = BACKEND_URL + "/movies/recommended"
-    const response = await fetch(url,{
+    const response = await fetch(url, {
         method: 'GET'
     });
     if (response.status !== 200) {
@@ -119,21 +121,11 @@ function processFormData(form_id) {
 
 /**
  * Display error message on home page.
- * @param {string} message_text text to display
+ * @param {string} messageText text to display
  */
-function displayErrorMessage(message_text) {
+function displayErrorMessage(messageText) {
     const errorMessageBox = document.getElementById("error-message-box");
-    errorMessageBox.innerText = message_text;
-}
-
-
-/**
- * Display error message on seating plan page.
- * @param {string} message_text text to display
- */
-function displaySeatErrorMessage(message_text) {
-    const errorMessageBox = document.getElementById("seats-error-message-box");
-    errorMessageBox.innerText = message_text;
+    errorMessageBox.innerText = messageText;
 }
 
 
@@ -150,82 +142,64 @@ async function verifyMovieSelection() {
         displayErrorMessage("Please select a movie.");
     } else {
         const url = BACKEND_URL + '/movies/selection' + '?id=' + movieId;
-        const response = await fetch(url,  {
-            method: 'POST'
+        const response = await fetch(url, {
+            method: 'PATCH'
         });
         if (response.status !== 200) {
             displayErrorMessage("Something went wrong. Please try again.");
         } else {
-            window.location.href = `./seats.html?ticket_count=${ticketCount}`;
+            window.location.href = `seating-plan.html?ticket_count=${ticketCount}`;
         }
     }
 }
 
 
 /**
- * Generates the content of a filtering options dropdown menu.
- * TODO: Make all dropdown menus dynamic by requesting the content data from back-end.
+ * Fetch dropdown menu content from backend and create the dropdown menus.
  */
-function createTimeFilteringDropdown() {
-    const dropdownMenu = document.getElementById("session-starting-time-selection");
-    let dropdownContent = "";
-    for (let i = 8; i < 23; i++) {
-        if (dropdownContent === "") {
-            dropdownContent += `<option value="-" selected>-</option>`
-        }
-        // converting value to string enables easier data processing in back-end movies filtering function
-        dropdownContent += `<option value=${i.toString()}>${i}</option>`
-    }
-    dropdownMenu.innerHTML = dropdownContent;
-}
+async function fetchFilteringOptions() {
 
-
-/**
- * Requests seating plan data from back-end.
- * Displays notification in case no neighbouring seats are available or no seats are available at all.
- */
-async function loadSeatingPlan() {
-    const params = new URLSearchParams(window.location.search);
-    const ticketCount = params.get('ticket_count');
-
-    const url = BACKEND_URL + "/seats" + "?ticketCount=" + ticketCount;
-    const response = await fetch(url,  {
+    const url = BACKEND_URL + '/movies/attributes';
+    const response = await fetch(url, {
         method: 'GET'
     });
-
-    const data = await response.json();
-    // {"seatNumber": seat number, "occupationStatus": state of the seat (FREE / SELECTED / OCCUPIED)}
-    if (response.status !== 200 && response.status !== 206) {
-        displaySeatErrorMessage("No available seats.");
-    } else if (response.status === 206) {
-        displaySeatErrorMessage("Unfortunately no neighbouring seats were available.");
-        renderSeatingPlan(data);
+    if (response.status !== 200) {
+        displayErrorMessage("Couldn't load dropdown menu content");
     } else {
-        renderSeatingPlan(data);
+        const data = await response.json();
+        createFilteringDropdownMenus(data);
     }
 }
 
-/**
- * Renders the seating plan based on seating plan data.
- * @param {list} seatingPlanData seating plan data in json format
- * seatingPlanData: {"seatNumber": seat number, "occupationStatus": state of the seat (FREE / SELECTED / OCCUPIED)}
- */
-function renderSeatingPlan(seatingPlanData) {
-    for (const seat of seatingPlanData) {
-        const seatingPlanField = document.getElementById('seating-plan');
-        // create form with radio buttons
-        let displayedSeats = "";
 
-        for (const seat of seatingPlanData) {
-            const seatNumber = seat.seatNumber;
-            let background_color;
-            switch (seat.occupationStatus) {
-                case "FREE": background_color = "lightgray"; break;
-                case "OCCUPIED": background_color = "Red"; break;
-                case "SELECTED": background_color = "Green"; break;
-            }
-            displayedSeats += `<div class="seat" style="background-color: ${background_color}">${seatNumber}</div>`
-        }
-        seatingPlanField.innerHTML = displayedSeats;
+/**
+ * Generate HTML option elements for a dropdown menu based on the provided options data.
+ *
+ * @param optionsData - Array of options to populate the dropdown menu.
+ * @returns {string} String containing the generated HTML option elements.
+ */
+function createFormOptions(optionsData) {
+    let formOptions = `<option selected></option>`
+    for (const option of optionsData) {
+        formOptions +=
+            `<option value="${option}">${option}</option>`
     }
+    return formOptions;
+}
+
+
+/**
+ * Create dropdown menus for selecting movie filtering parameters.
+ * @param {json} movieAttributes text to display
+ */
+function createFilteringDropdownMenus(movieAttributes) {
+    const genreDropdown = document.getElementById("genre-selection");
+    const ageRatingDropdown = document.getElementById("age-rating-selection");
+    const startingTimeDropdown = document.getElementById("session-starting-time-selection");
+    const languageDropdown = document.getElementById("language-selection");
+
+    genreDropdown.innerHTML = createFormOptions(movieAttributes.genres);
+    ageRatingDropdown.innerHTML = createFormOptions(movieAttributes.ageRatings);
+    startingTimeDropdown.innerHTML = createFormOptions(movieAttributes.sessionStartingTimes);
+    languageDropdown.innerHTML = createFormOptions(movieAttributes.languages);
 }
