@@ -1,6 +1,20 @@
-# Cinema
+# Cinema application
 
-Simple cinema application that lets the user filter movies, get recommendations and select seats.
+Simple lightweight cinema application that lets the user browse movies and get recommendations.
+After selecting the movie and buying the tickets, the user is given recommendations regarding the seating plan.
+Recommended seats are all next to each other and as close to the centre of the cinema hall as possible.
+
+Current main branch contains the refactored and restructured version of the test assignment.
+Original submission, which earned me my first internship in summer 2024, is available [here](https://github.com/Rsand03/cinema-application/tree/original-submission).
+
+
+## Prerequisites
+
+Before running the application, ensure you have the following installed:
+
+- [Java JDK 21+](https://adoptopenjdk.net/)
+- [Gradle](https://gradle.org/) (if building manually)
+
 
 ## Installation and setup
 
@@ -13,34 +27,28 @@ git clone [https://github.com/Rsand03/cinema-application.git]
 3) Run CinemaApplication.java
 4) Navigate to http://localhost:8080/ in your browser
 
-## Kasutamine
-Kirjutan selle osa eesti keeles, kuna ka proovitöö juhend oli eesti keeles.
 
-Avalehel kuvatakse kasutajale esialgu kõik kinoseansid. Igal seansil on filmi pealkiri, žanr, vanusepiirang, algusaeg ning keel.
-### Filmide sorteerimine
-Veebilehe ülemises osas on dropdown menüüd. Kasutaja saab valida, mille järgi filmiseansse sorteeritakse. Kui valitud on "-", siis antud kategooria alusel filme ei filtreerita. Filtreerimise teostamiseks tuleb paremal pool vajutada nuppu "Apply filter". Seejärel ilmuvad sobivad filmid ekraanile või kuvatakse veateade, et ühtegi filmi ei leitud. Algse menüü juurde naasmiseks tuleb vajutada nuppu "All movies".
+## Usage
 
-### Filmide soovitamine
-Filmiseansside soovituste saamiseks tuleb vajutada nuppu "Recommended movies". Kui kasutajal puudub vaatamiste ajalugu (ehk ühtegi piletit pole veel ostetud), siis kuvatakse veateade. Filme soovitatakse eelnevalt vaadatud filmide žanrite põhjal. Juba vaadatud filmide seansse ei soovitata, isegi kui seansi keel või algusaeg on erinevad.
+On the homepage, all movie sessions are initially displayed to the user. Each session includes the movie title, genre, age rating, start time, and language.
 
-### Pileti(te) ostmine
-Pileti ostmiseks tuleb märkida soovitud filmiseanss (seansil klikkides) ning valida ostetavate piletite arv. Võimalik on osta 1 kuni 5 piletit, vaikimisi on piletite arv 1. Ostu sooritamiseks tuleb vajutada rohelist nuppu "BUY". Kui pole valitud ühtegi filmi, kuvatakse veateade.
+### Sorting movies
+At the top of the webpage, there are dropdown menus. The user can select the criteria by which movie sessions are sorted. Movies are not filtered based on a specific category if no parameter is selected. To apply the filter, the user must click the "Apply filter" button on the right. The appropriate movies will then appear on the screen, or an error message will be displayed if no movies are found. To return to the original menu, the user must click the "All movies" button.
 
-### Istekohad
-Peale "BUY" nupu vajutamist suunatakse kasutaja saali istekohtade plaani juurde. Määratud kohad on märgitud rohelisega. Kui pileteid on mitu, siis soovitatakse esmajärjekorras istekohti, mis asuvad kõik üksteise kõrval ning ühes reas. Lisaks sellele võimalikult saali keskel. Kui valitud on näiteks 5 piletit ning viit üksteise kõrval asetsevat vaba istet ei leidu, siis valitakse ükskõik millised võimalikult saali keskel asetsevad istmed. Viimasel juhul kuvatakse ka vastav teade. "Back" nupp viib tagasi filmide valimise lehele (eelnevalt valitud film on lisatud kasutaja vaatamiste ajalukku).
+### Movie recommendations
+To receive movie session recommendations, the user must click the "Recommended movies" button. If the user has no viewing history (i.e., no tickets have been purchased yet), an error message will be displayed. Movies are recommended based on the genres of previously watched films. Sessions of already watched movies are not recommended, even if the session's language or start time is different.
 
-## Projekti kokkuvõte
+### Purchasing tickets
+To purchase a ticket, the user must select the desired movie session (by clicking on it) and choose the number of tickets to buy. It is possible to purchase between 1 and 5 tickets, with the default quantity set to 1. To complete the purchase, the user must click the green "BUY" button. If no movie has been selected, an error message will be displayed.
 
-* Realiseerisin kõik nõutud funktsionaalsused, välja arvatud terve nädala kinokava kuvamise. Selle lahendamiseks oleks vaja kasutada LocalDate objekti koos kuupäevaga, või siis front-end'is filmid juhuslikult ja näiliselt erinevate nädalapäevade vahel ära jagada.
-* Tegelesin projektiga 3 õhtut ning töötunde kulus ~20.
-* Peaaegu kogu kood on minu enda kirjutatud. Kopeerisin ainult mõned HTML ja CSS *templateid*, ning needki pärinevad mu varasematest projektidest.
-* Abi saamiseks kasutasin Spring booti Youtube tutoriale, googeldamist, Stack Overflowi ning CSSi jaoks ka ChatGPTd.
-* Kõige keerulisem osa projekti juures oli CSSi abil kinosaali plaani kuvamine, millele aitas lõpuks lahenduse leida Stack Overflow. Istekohtade front-end oli isegi keerulisem kui back-endi istekohtade soovitamise algoritm.
-* Kood toetab valdavalt uute filmide, seansiaegade, žanrite jne lisamist, kuid ainus "staatiline takistus" on front-endi filtreerimise valikute dropdown menüüd. Neid ei jõudnud kahjuks sobilike api requestide ja javascripti abil dünaamiliseks muuta. Dünaamiliste menüüdega oleks võinud juba mõne filmide andmebaasi integreerimise peale mõelda.
-* Filmid ja seansid on omavahel eraldatud. Filmidel on pealkiri, žanr ja vanusepiirang, seansil on film (koos kõigi selle parameetritega), algusaeg ning keel. Üldise loogika osas on ainus viga see, et filmidele määratakse žanr ja vanusepiirang juhuslikult. Võib esineda huvitavaid kombinatsioone.
-* Kahjuks jõudsin testid lisada ainult Seat klassile, kuigi põhjalikud testid on iga projekti lahutamatu osa.
-* Kasulikud konstandid, mille muutmist võib katsetada: Cinema klassi SESSION_COUNT, Seat klassi SEAT_BEING_OCCUPIED_PROBABILITY.
+### Seating plan
+After clicking the "BUY" button, the user is directed to the seating plan of the theater hall. The assigned seats are marked in green. If multiple tickets are purchased, the system prioritizes seats that are all next to each other and in the same row, preferably near the center of the hall. If, for example, 5 tickets are selected but no five adjacent free seats are available, any available seats as close to the center as possible will be chosen. In this case, a corresponding notification will also be displayed. The "Back" button returns the user to the movie selection page (the previously selected movie is added to the user's viewing history).
+
+## Some examples of the front-end
+
+![Alt text](image-url-or-path)
+![Alt text](image-url-or-path)
 
 ## Contributing
 
-Rasmus Sander (RSand03)
+RSand03
