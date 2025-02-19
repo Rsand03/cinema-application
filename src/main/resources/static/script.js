@@ -1,5 +1,4 @@
-
-const BACKEND_URL = 'http://localhost:8080';
+const BACKEND_URL = 'http://localhost:8080/api';
 
 
 /**
@@ -41,7 +40,7 @@ async function fetchFilteredMoviesData() {
         "&ageRating=" + ageRating +
         "&sessionStartTime=" + sessionStartingTime +
         "&language=" + language;
-    const response = await fetch(url,{
+    const response = await fetch(url, {
         method: 'GET'
     });
     if (response.status !== 200) {
@@ -60,7 +59,7 @@ async function fetchFilteredMoviesData() {
  */
 async function fetchRecommendedMovies() {
     const url = BACKEND_URL + "/movies/recommended"
-    const response = await fetch(url,{
+    const response = await fetch(url, {
         method: 'GET'
     });
     if (response.status !== 200) {
@@ -141,8 +140,8 @@ async function verifyMovieSelection() {
         displayErrorMessage("Please select a movie.");
     } else {
         const url = BACKEND_URL + '/movies/selection' + '?id=' + movieId;
-        const response = await fetch(url,  {
-            method: 'POST'
+        const response = await fetch(url, {
+            method: 'PATCH'
         });
         if (response.status !== 200) {
             displayErrorMessage("Something went wrong. Please try again.");
@@ -152,13 +151,14 @@ async function verifyMovieSelection() {
     }
 }
 
+
 /**
  * Fetch dropdown menu content from backend and create the dropdown menus.
  */
-async function fetchFilteringParameters() {
+async function fetchFilteringOptions() {
 
     const url = BACKEND_URL + '/movies/attributes';
-    const response = await fetch(url,  {
+    const response = await fetch(url, {
         method: 'GET'
     });
     if (response.status !== 200) {
@@ -169,49 +169,35 @@ async function fetchFilteringParameters() {
     }
 }
 
+
+/**
+ * Generate HTML option elements for a dropdown menu based on the provided options data.
+ *
+ * @param optionsData - Array of options to populate the dropdown menu.
+ * @returns {string} String containing the generated HTML option elements.
+ */
+function createFormOptions(optionsData) {
+    let formOptions = `<option value="-" selected>-</option>`
+    for (const genreOption of optionsData) {
+        formOptions +=
+            `<option value="${genreOption}">${genreOption}</option>`
+    }
+    return formOptions;
+}
+
+
 /**
  * Create dropdown menus for selecting movie filtering parameters.
  * @param {json} movieAttributes text to display
  */
 function createFilteringDropdownMenus(movieAttributes) {
-
-    for (const genreOption of movieAttributes.genres) {
-        let genreOptions = `<option value="-" selected>-</option>`
-        genreOptions +=
-            `<option value="${genreOption}">${genreOption}</option>`
-    }
-    for (const ageRating of movieAttributes.ageRatings) {
-        let ageRatingOptions = `<option value="-" selected>-</option>`
-        ageRatingOptions +=
-            `<option value="${ageRating}">${ageRating}</option>`
-    }
-    for (const language of movieAttributes.languages) {
-        let languageOptions = `<option value="-" selected>-</option>`
-        languageOptions +=
-            `<option value="${language}">${language}</option>`
-    }
-
     const genreDropdown = document.getElementById("genre-selection");
     const ageRatingDropdown = document.getElementById("age-rating-selection");
+    const startingTimeDropdown = document.getElementById("session-starting-time-selection");
     const languageDropdown = document.getElementById("language-selection");
 
-    genreDropdown.innerHTML = genreOptions;
-    ageRatingDropdown.innerHTML = ageRatingOptions;
-    languageDropdown.innerHTML = languageOptions
-}
-
-/**
- * Generates the content of a filtering options dropdown menu.
- */
-function createTimeFilteringDropdown() {
-    const dropdownMenu = document.getElementById("session-starting-time-selection");
-    let dropdownContent = "";
-    for (let i = 8; i < 23; i++) {
-        if (dropdownContent === "") {
-            dropdownContent += `<option value="-" selected>-</option>`
-        }
-        // converting value to string enables easier data processing in back-end movies filtering function
-        dropdownContent += `<option value=${i.toString()}>${i}</option>`
-    }
-    dropdownMenu.innerHTML = dropdownContent;
+    genreDropdown.innerHTML = createFormOptions(movieAttributes.genres);
+    ageRatingDropdown.innerHTML = createFormOptions(movieAttributes.ageRatings);
+    startingTimeDropdown.innerHTML = createFormOptions(movieAttributes.sessionStartingTimes);
+    languageDropdown.innerHTML = createFormOptions(movieAttributes.languages);
 }

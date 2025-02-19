@@ -15,6 +15,7 @@ import static com.cgi.app.util.Constants.SEAT_BEING_OCCUPIED_IN_SEATING_PLAN_PRO
 @Setter
 public class SeatEntity {
 
+    // Mocked entity without DB
     private final int rowNumber;
     private final int seatNumber;
     private final int distanceFromCenter;

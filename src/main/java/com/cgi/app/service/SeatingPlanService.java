@@ -19,7 +19,7 @@ import static com.cgi.app.entity.seat.SeatEntity.OccupationStatus.SELECTED;
 @Service
 public class SeatingPlanService {
 
-    // Mocked repository functionality
+    // Mocked repository functionality without DB
     private static final CinemaHallEntity cinemaHallEntity = CinemaHallRepository.cinemaHallEntity;
     private final SeatMapper seatMapper;
 

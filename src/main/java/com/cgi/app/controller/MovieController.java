@@ -1,5 +1,6 @@
 package com.cgi.app.controller;
 
+import com.cgi.app.dto.MovieSessionAttributesDto;
 import com.cgi.app.dto.MovieSessionDto;
 import com.cgi.app.entity.movie.MovieSessionEntity;
 import com.cgi.app.service.MovieSessionService;
@@ -7,6 +8,8 @@ import com.cgi.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("api/movies")
 @RequiredArgsConstructor
 public class MovieController {
 
@@ -28,9 +32,20 @@ public class MovieController {
      * "id": movie session id
      * "asString": all necessary movie data as a formatted string
      */
-    @RequestMapping("/movies")
+    @GetMapping("")
     public ResponseEntity<List<MovieSessionDto>> getAvailableMovieSessions() {
         return ResponseEntity.ok(movieSessionService.getAvailableMovieSessions());
+    }
+
+    /**
+     * Get all movie attributes such as available age ratings, languages etc.
+     *
+     * @return A {@link MovieSessionAttributesDto} containing distinct genres, age ratings,
+     * session starting times, and languages.
+     */
+    @GetMapping("/attributes")
+    public ResponseEntity<MovieSessionAttributesDto> getMovieSessionAttributes() {
+        return ResponseEntity.ok(movieSessionService.getMovieSessionAttributes());
     }
 
     /**
@@ -44,7 +59,7 @@ public class MovieController {
      * "id": movie session id
      * "asString": all necessary movie data as a formatted string
      */
-    @RequestMapping("/movies/filtered")
+    @GetMapping("/filtered")
     public ResponseEntity<List<MovieSessionDto>> getFilteredMovies(@RequestParam String genre,
                                                                    @RequestParam String ageRating,
                                                                    @RequestParam String sessionStartTime,
@@ -61,7 +76,7 @@ public class MovieController {
      * "id": movie session id
      * "asString": all necessary movie data as a formatted string
      */
-    @RequestMapping("/movies/recommended")
+    @GetMapping("/recommended")
     public ResponseEntity<List<MovieSessionDto>> getRecommendedMovies() {
         List<MovieSessionDto> result = userService.getTopFiveRecommendedMovies();
         if (result.isEmpty()) {
@@ -75,7 +90,7 @@ public class MovieController {
      *
      * @return Http status 200: verification was successful
      */
-    @RequestMapping("/movies/selection")
+    @PatchMapping("/selection")
     public ResponseEntity<HttpStatus> applyMovieSessionSelection(@RequestParam Integer id) {
         Optional<MovieSessionEntity> selectedMovieSession = movieSessionService.getMovieSessionById(id);
         if (selectedMovieSession.isPresent()) {

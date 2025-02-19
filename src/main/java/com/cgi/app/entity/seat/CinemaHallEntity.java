@@ -13,6 +13,7 @@ import static com.cgi.app.util.Constants.TOTAL_SEATS_COUNT;
 @Getter
 public class CinemaHallEntity {
 
+    // Mocked entity without DB
     private final List<SeatEntity> seats = new ArrayList<>();
 
     public CinemaHallEntity() {

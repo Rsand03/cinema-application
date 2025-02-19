@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = MovieMapper.class)
@@ -26,10 +27,13 @@ public interface MovieSessionMapper {
     @AfterMapping
     default void setPreFormattedMoveSessionData(@MappingTarget MovieSessionDto dto) {
         if (dto.getMovie() != null) {
+            String formattedTime = LocalTime.parse(
+                    dto.getStartingTime()).format(java.time.format.DateTimeFormatter.ofPattern("HH:mm")
+            );
             dto.setAsString(String.format("%-17s", dto.getMovie().getTitle())
                     + String.format("%-15s", dto.getMovie().getGenre())
                     + String.format("%-15s", dto.getMovie().getAgeRating())
-                    + String.format("%-15s", dto.getStartingTime())
+                    + String.format("%-15s", formattedTime)
                     + String.format("%-10s", dto.getLanguage()));
         }
     }

@@ -1,5 +1,5 @@
 
-const BACKEND_URL = 'http://localhost:8080';
+const BACKEND_URL = 'http://localhost:8080/api';
 
 
 /**
@@ -27,6 +27,7 @@ async function fetchSeatingPlan() {
     }
 }
 
+
 /**
  * Display error message on seating plan page.
  * @param {string} message_text text to display
@@ -35,6 +36,7 @@ function displaySeatErrorMessage(message_text) {
     const errorMessageBox = document.getElementById("seats-error-message-box");
     errorMessageBox.innerText = message_text;
 }
+
 
 /**
  * Renders the seating plan based on seating plan data.
